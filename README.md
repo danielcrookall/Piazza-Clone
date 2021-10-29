@@ -7,11 +7,16 @@
   - create `.env` file
   - write your environment variable
   ```
-  DBHOST=dbserver.students.cs.ubc.ca
+  DB_HOST=dbserver.students.cs.ubc.ca
   CWL=<your cwl id>
-  DBPASSWORD=<letter 'a' followed by your student number>
-  DB=sbp
+  DB_PASSWORD=<letter 'a' followed by your student number>
+  DB=<your cwl id>
   ```
 
 ### How to start app
 - ```npm start```
+
+### The way to connect MySQL manually
+  - Log into MySQL by running:
+`mysql -h dbserver.students.cs.ubc.ca -u 'your cwl' -p`
+  - When prompted for your password, enter the letter a followed by your student number. For example, if your student number was 12345678 then your password would be a12345678. 

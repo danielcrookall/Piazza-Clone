@@ -1,4 +1,6 @@
 const express = require('express');
+const mysql = require('mysql');
+const connection = require('./src/mysqlConnection');
 
 const app = express();
 
@@ -14,5 +16,9 @@ app.get('/', (req, res) => {
 
 const PORT = 8080;
 app.listen(PORT, '0.0.0.0', () => {
+    connection.query('SHOW TABLES', (err, result) => {
+        if (err) throw err;
+        console.log('tables: ' + result);
+    })
     console.log(`app is running on port ${PORT}`)
 });
