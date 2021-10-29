@@ -1,8 +1,8 @@
-import * as experss from 'express';
+const express = require('express');
 
-const app = experss();
+const app = express();
 
-app.use(experss.Router());
+app.use(express.Router());
 
 // set the view engine to ejs
 app.set('views', __dirname + '/views');
@@ -13,5 +13,6 @@ app.get('/', (req, res) => {
 });
 
 const PORT = 8080;
-app.listen(PORT);
-console.log(`app is running on port ${PORT}`)
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`app is running on port ${PORT}`)
+});
