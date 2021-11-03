@@ -1,0 +1,19 @@
+<%- include('header.ejs'); %>
+
+<main>
+    <h3>Sign UP</h3>
+
+    <form method="post" action="/signup">
+        <div>
+          <label for="username">Username</label>
+          <input type="text" name="username" placeholder="username" value="" required>
+        </div>
+        <div>
+          <label for="isAdmin">Admin? </label>
+          <input type="checkbox" name="isAdmin" value="1">
+        </div>
+        <input type="submit" class="btn btn-primary" value="submit">
+    </form>
+</main>
+
+<%- include('footer.ejs'); %>
