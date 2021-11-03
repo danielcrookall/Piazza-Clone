@@ -22,7 +22,7 @@ CREATE TABLE Course (
 courseNum integer,
 department VARCHAR(10),
 PRIMARY KEY (courseNum, department),
-FOREIGN KEY (department) REFERENCES DepartmentFaculty (department)
+FOREIGN KEY (department) REFERENCES DepartmentFaculty (department) ON DELETE CASCADE
 );
 
 CREATE TABLE Register (
@@ -30,8 +30,8 @@ userID integer,
 courseNum integer,
 department VARCHAR(10),
 PRIMARY KEY (userID, courseNum, department),
-FOREIGN KEY (userID) REFERENCES User(userID),
-FOREIGN KEY (courseNum, department) REFERENCES Course (courseNum, department)
+FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE CASCADE,
+FOREIGN KEY (courseNum, department) REFERENCES Course (courseNum, department) ON DELETE CASCADE
 );
 
 CREATE TABLE Problem (
@@ -44,16 +44,16 @@ courseNum integer,
 department VARCHAR(10),
 difficulty FLOAT,
 PRIMARY KEY (problemID),
-FOREIGN KEY (userID) REFERENCES Register(userID),
-FOREIGN KEY (typeName) REFERENCES Type (typeName),
-FOREIGN KEY (courseNum, department) REFERENCES Course (courseNum, department)
+FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE CASCADE,
+FOREIGN KEY (typeName) REFERENCES Type (typeName) ON DELETE SET NULL,
+FOREIGN KEY (courseNum, department) REFERENCES Course (courseNum, department) ON DELETE SET NULL
 );
 
 CREATE TABLE Admin (
 userID integer,
 staffNum integer UNIQUE NOT NULL,
 PRIMARY KEY (userID),
-FOREIGN KEY (userID) REFERENCES User(userID)
+FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE CASCADE
 );
 
 
@@ -64,8 +64,8 @@ userID integer NOT NULL,
 problemID integer NOT NULL,
 confidence integer,
 PRIMARY KEY (solutionID),
-FOREIGN KEY (userID) REFERENCES User(userID),
-FOREIGN KEY (problemID) REFERENCES Problem(problemID)
+FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE CASCADE,
+FOREIGN KEY (problemID) REFERENCES Problem(problemID) ON DELETE CASCADE
 );
 
 
@@ -75,7 +75,13 @@ body VARCHAR(5000),
 requestType VARCHAR(32),
 userID integer,
 PRIMARY KEY (requestID),
-FOREIGN KEY (userID) REFERENCES User(userID)
+FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE SET NULL
+);
+
+CREATE TABLE VoteNumPosition(
+voteNum integer DEFAULT 0,
+votePos char(20),
+PRIMARY KEY (voteNum)
 );
 
 CREATE TABLE Advice (
@@ -83,16 +89,11 @@ solutionID integer,
 adviceID integer,
 comment VARCHAR(1000),
 userID integer NOT NULL,
-voteNum integer NOT NULL,
+voteNum integer NOT NULL DEFAULT 0,
 PRIMARY KEY (solutionID, adviceID),
-FOREIGN KEY (solutionID) REFERENCES Solution(solutionID),
-FOREIGN KEY (userID) REFERENCES User(userID)
-);
-
-CREATE TABLE VoteNumPosition(
-voteNum integer,
-votePos char(20),
-PRIMARY KEY (voteNum)
+FOREIGN KEY (solutionID) REFERENCES Solution(solutionID) ON DELETE CASCADE,
+FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE CASCADE,
+FOREIGN KEY (voteNum) REFERENCES VoteNumPosition(voteNum) ON DELETE CASCADE
 );
 
 CREATE TABLE VoteRecord (
@@ -102,6 +103,6 @@ solutionID integer NOT NULL,
 adviceID integer NOT NULL,
 userID integer NOT NULL,
 PRIMARY KEY (recordID),
-FOREIGN KEY (solutionID, adviceID) REFERENCES Advice(solutionID,adviceID),
-FOREIGN KEY (userID) REFERENCES User(userID)
+FOREIGN KEY (solutionID, adviceID) REFERENCES Advice(solutionID,adviceID) ON DELETE CASCADE,
+FOREIGN KEY (userID) REFERENCES User(userID) ON DELETE CASCADE
 );
