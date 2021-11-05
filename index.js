@@ -12,8 +12,10 @@ app.use(urlencoded({ extended: false }))
 
 // user
 let user = null;
-const setUser = (username) => {
+let userId = null;
+const setUser = (username, userID) => {
     user = username;
+    userId = userID;
 }
 const setUserToData = (data) => {
     data.user = user;
@@ -37,7 +39,7 @@ app.post('/signup', (req, res, next) => {
     }
     connection.query(`insert into User(username, isAdmin) values('${username}', ${isAdmin})`, (err, result) => {
       if (err) return next(err);
-      setUser(username);
+      setUser(username, result[0].userID);
       res.redirect('/');
     })
   } catch (e) {
@@ -47,14 +49,14 @@ app.post('/signup', (req, res, next) => {
 app.get('/login', (req, res) => {
     res.render('login', {user: user});
 });
-app.post('/login', (req, res) => {
+app.post('/login', (req, res, next) => {
     const username = req.body.username;
-    connection.query(`select username from User where username='${username}'`, (err, result) => {
+    connection.query(`select userID, username from User where username='${username}'`, (err, result) => {
         if (err) return next(err);
         if (result.length == 1) {
-            setUser(result[0].username);
+          setUser(result[0].username, result[0].userID);
         }
-        console.log(username);
+        console.log(user + ' ' + userId);
         res.redirect('/');
     });
 });
@@ -69,8 +71,90 @@ app.get('/user', (req, res) => {
 });
 
 // Problem
+// input: nothing
+// query: select all problem with all attribute and return
+// output render 'problem'
 app.get('/problem', (req, res) => {
     res.render('problem', setUserToData({}));
+});
+// input: all attribute for problem
+// query: create a new problem
+// output redirect '/problem'
+app.post('/problem', (req, res) => {
+  res.redirect('/problem');
+});
+
+// Solution
+// input: nothing
+// query: select all problem with all attribute and return
+// output render 'solution'
+app.get('/solution', (req, res) => {
+  res.render('solution', setUserToData({}));
+});
+// input: all attributes of solution
+// query: create a new solution
+// output render 'solution'
+app.post('/solution', (req, res) => {
+  res.redirect('/solution');
+});
+
+// Advice
+// input: nothing
+// query: select all problem with all attribute and return
+// output render 'advice'
+app.get('/advice', (req, res) => {
+  res.render('advice', setUserToData({}));
+});
+// input: all attributes of advice
+// query: create a new advice
+// output render 'advice'
+app.post('/advice', (req, res) => {
+  res.redirect('/advice');
+});
+
+
+// Advice Request
+// input: nothing
+// query: select all problem with all attribute and return
+// output render 'advice-request'
+app.get('/advice-request', (req, res) => {
+  res.render('advice-request', setUserToData({}));
+});
+// input: all attributes of advice-request
+// query: create a new advice-request
+// output render '/advice-request'
+app.post('/advice-request', (req, res) => {
+  res.redirect('/advice-request');
+});
+
+// Course
+app.get('/course', (req, res, next) => {
+  const context = {};
+  const testData = [
+    [304, 'CPSC'],
+    [322, 'CPSC'],
+    [213, 'CPSC'],
+    [200, 'MATH'],
+    [221, 'MATH'],
+    [112, 'ENGL'],
+    [302, 'MATH'],
+    [101, 'PHYS']
+  ];
+  context.courses = testData;
+  connection.query(`select * from Register where userID=${userId}`, (err, result) => {
+    if (err) return next(err);
+    context.registerCourses = result;
+    res.render('course', setUserToData(context));
+  });
+});
+app.post('/register', (req, res, next) => {
+  const register = req.body.register;
+  const department = register.split(' ')[0];
+  const courseNum = register.split(' ')[1];
+  connection.query(`insert into Register(userID, courseNum, department) values('${userId}', '${courseNum}', '${department}')`, (err, _result) => {
+    if (err) return next(err);
+    res.redirect('/course');
+  });
 })
 
 // error handler
