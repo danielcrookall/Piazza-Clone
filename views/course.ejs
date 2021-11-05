@@ -1,0 +1,55 @@
+<%- include('header.ejs'); %>
+
+<main>
+  <div class="container">
+    <h3>Course List</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Department</th>
+          <th scope="col">Course Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < courses.length; i++) {%>
+          <tr>
+            <td><%= courses[i][1] %> </td>
+            <td><%= courses[i][0] %> </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <div style="display: flex;">
+      <h3 style="margin: 5px;">Registered Course List of <%= user %> </h3>
+      <div style="margin: 20px; background-color: gainsboro;">
+        <h5 style="margin: 5px;">Register Course</h5>
+        <form action="/register" method="post">
+          <select class="form-select" name="register" id="department">
+            <% for(let i = 0; i < courses.length; i++) {%>
+              <option value="<%= courses[i][1] %> <%= courses[i][0] %>"><%= courses[i][1] %> <%= courses[i][0] %></option>
+            <% } %>
+          </select>
+          <input type="submit" class="btn btn-primary" value="register">
+        </form>
+      </div>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Department</th>
+          <th scope="col">Course Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < registerCourses.length; i++) {%>
+          <tr>
+            <td><%= registerCourses[i].department %> </td>
+            <td><%= registerCourses[i].courseNum %> </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<%- include('footer.ejs'); %>
