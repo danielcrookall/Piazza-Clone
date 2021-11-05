@@ -1,7 +1,71 @@
 <%- include('header.ejs'); %>
 
 <main>
-    <h3>Problem List</h3>
+  <div class="container">
+    <h3>Problems</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">problemID</th>
+          <th scope="col">title</th>
+          <th scope="col">body</th>
+          <th scope="col">userID</th>
+          <th scope="col">Problem Type</th>
+          <th scope="col">Course Number</th>
+          <th scope="col">Department</th>
+          <th scope="col">Difficulty</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < problems.length; i++) {%>
+          <tr>
+            <td><%= problems[i].problemID %></td>
+            <td><%= problems[i].title %></td>
+            <td><%= problems[i].body %></td>
+            <td><%= problems[i].userID %></td>
+            <td><%= problems[i].typeName %></td>
+            <td><%= problems[i].courseNum %></td>
+            <td><%= problems[i].department %></td>
+            <td><%= problems[i].difficulty %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <div>
+      <h3>Create new Problem</h3>
+      <form action="/problem" method="post">
+        <input type="submit" class="btn btn-primary" value="Create">
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">Title</span>
+          <input type="text" name='title' class="form-control" required>
+        </div>
+        <div class="input-group">
+          <span class="input-group-text">Body</span>
+          <textarea class="form-control" name='body' required></textarea>
+        </div>
+        <div class="input-group">
+          <label for="difficulty" class="form-class">Difficulty</label>
+          <input type="range" name="difficulty" class="form-range" min="0" max="5" step="0.5" id="difficulty" required>
+        </div>
+        <div class="input-group">
+          <label for="course">Course</label>
+          <select class="form-select" name="course" required>
+            <% for(let i = 0; i < courses.length; i++) {%>
+              <option value="<%= courses[i].department %> <%= courses[i].courseNum %>"><%= courses[i].department %> <%= courses[i].courseNum %></option>
+            <% } %>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="typeName">Problem Type</label>
+          <select class="form-select" name="typeName" required>
+            <% for(let i = 0; i < types.length; i++) {%>
+              <option value="<%= types[i].typeName %>"><%= types[i].typeName %></option>
+            <% } %>
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
 </main>
 
 <%- include('footer.ejs'); %>
