@@ -137,8 +137,8 @@ app.get('/solution', (req, res) => {
 // output render 'solution'
 app.post('/solution', (req, res) => {
     // console.log(req.body);
-    const queryString = 'insert into Solution(solutionID, body, userID, problemID, confidence) ' + 
-    `values(${req.body.solutionID}, '${req.body.body}', ${userId}, 
+    const queryString = 'insert into Solution(body, userID, problemID, confidence) ' + 
+    `values('${req.body.body}', ${userId}, 
     ${req.body.problemID}, ${req.body.confidence});`
     connection.query(queryString, (err, result) => {
       if (err) next(err);
