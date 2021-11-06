@@ -33,7 +33,7 @@
           <label for="solution">Solution</label>
           <select class="form-select" name="solution" required>
             <% for(let i = 0; i < solutions.length; i++) {%>
-              <option value="<%= solutions[i].solutionID %>"><%= solutions[i].title %></option>
+              <option value="<%= solutions[i].solutionID %>"><%= solutions[i].body %></option>
             <% } %>
           </select>
         </div>
