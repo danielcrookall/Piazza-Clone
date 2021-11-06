@@ -150,12 +150,11 @@ app.post('/solution', (req, res, next) => {
 // query: select all advice with all attribute and return
 // output render 'advice'
 app.get('/advice', (req, res, next) => {
-<<<<<<< HEAD
     const context = {};
     connection.query('select * from Advice', (err,result) => {
         if (err) next(err);
 
-        context.advice = result;
+        context.advices = result;
     connection.query('select * from Solution', (err2, result2) =>  {
         if (err2) next(err2);
 
@@ -170,9 +169,6 @@ app.get('/advice', (req, res, next) => {
     });
 });
 });
-=======
-  res.render('advice', setUserToData({}));
->>>>>>> 81e23f694cfe74f19d496020f0555a621816702d
 });
 
 
@@ -180,8 +176,21 @@ app.get('/advice', (req, res, next) => {
 // query: create a new advice
 // output render 'advice'
 app.post('/advice', (req, res, next) => {
+  let randomInt = getRandomInt(0,10000);
+  console.log(req.body);
+  connection.query(`insert into Advice(solutionID, adviceID, comment, userID, voteNum)
+  values('${req.body.solutionID}', '${randomInt}', '${req.body.comment}', '${req.body.user}', '${req.body.voteNum}')`, (err, result) => {
+    if (err) next(err);
+
   res.redirect('/advice');
+  });
 });
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+}
 
 
 // Advice Request
