@@ -172,6 +172,7 @@ app.get('/advice', (req, res, next) => {
 });
 
 
+
 // input: all attributes of advice
 // query: create a new advice
 // output render 'advice'
