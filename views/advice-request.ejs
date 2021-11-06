@@ -1,0 +1,53 @@
+<%- include('header.ejs'); %>
+
+<main>
+  <div class="container">
+    <h3>Advice Request</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">requestID</th>
+          <th scope="col">body</th>
+          <th scope="col">requestType</th>
+          <th scope="col">userID</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < adviceRequests.length; i++) {%>
+          <tr>
+            <td><%= adviceRequests[i].requestID %></td>
+            <td><%= adviceRequests[i].body %></td>
+            <td><%= adviceRequests[i].requestType %></td>
+            <td><%= adviceRequests[i].userID %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <div>
+      <h3>Create new Advice Request</h3>
+      <form action="/advice-request" method="post">
+        <input type="submit" class="btn btn-primary" value="Create">
+        <div class="input-group">
+          <span class="input-group-text">Body</span>
+          <textarea class="form-control" name='body' required></textarea>
+        </div>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">requestType</span>
+          <input type="text" name='requestType' class="form-control" required>
+        </div>
+        <div class="input-group">
+          <label for="user">User</label>
+          <select class="form-select" name="user" required>
+            <% for(let i = 0; i < users.length; i++) {%>
+              <% if (users[i].username !== user ) {%>
+                <option value="<%= users[i].userID %>"><%= users[i].username %></option>
+              <% } %> 
+            <% } %>
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include('footer.ejs'); %>
