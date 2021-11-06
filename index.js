@@ -114,14 +114,36 @@ app.post('/problem', (req, res, next) => {
 // input: nothing
 // query: select all solution with all attribute and return
 // output render 'solution'
-app.get('/solution', (req, res, next) => {
-  res.render('solution', setUserToData({}));
+app.get('/solution', (req, res) => {
+  const context = {};
+  connection.query('select * from Solution', (err, result) => {
+    if (err) next(err);
+
+    context.solutions = result;
+    
+    connection.query('select * from Problem', (err2, result2) => {
+      if (err2) next(err2);
+
+      context.problems = result2;
+
+      context.userID = userID;
+      res.render('problem', setUserToData(context));
+      });
+    });
 });
+
 // input: all attributes of solution
 // query: create a new solution
 // output render 'solution'
-app.post('/solution', (req, res, next) => {
-  res.redirect('/solution');
+app.post('/solution', (req, res) => {
+    // console.log(req.body);
+    const queryString = 'insert into Solution(body, userID, problemID, confidence) ' + 
+    `values('${req.body.body}', ${userId}, 
+    ${req.body.problemID}, ${req.body.confidence});`
+    connection.query(queryString, (err, result) => {
+      if (err) next(err);
+      res.redirect('/solution');
+    })
 });
 
 // Advice
