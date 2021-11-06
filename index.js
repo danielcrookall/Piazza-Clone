@@ -120,9 +120,18 @@ app.get('/solution', (req, res) => {
     if (err) next(err);
 
     context.solutions = result;
-    res.render('solution', setUserToData(context));
-  });
+    
+    connection.query('select * from Problem', (err2, result2) => {
+      if (err2) next(err2);
+
+      context.problems = result2;
+
+      context.userID = userID;
+      res.render('problem', setUserToData(context));
+      });
+    });
 });
+
 // input: all attributes of solution
 // query: create a new solution
 // output render 'solution'
