@@ -136,7 +136,14 @@ app.get('/solution', (req, res) => {
 // query: create a new solution
 // output render 'solution'
 app.post('/solution', (req, res) => {
-  res.redirect('/solution');
+    // console.log(req.body);
+    const queryString = 'insert into Solution(solutionID, body, userID, problemID, confidence) ' + 
+    `values('${req.body.solutionID}', '${req.body.body}', ${userId}, 
+    '${req.body.problemID}');`
+    connection.query(queryString, (err, result) => {
+      if (err) next(err);
+      res.redirect('/solution');
+    })
 });
 
 // Advice
