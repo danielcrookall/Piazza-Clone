@@ -1,0 +1,49 @@
+<%- include('header.ejs'); %>
+
+<main>
+  <div class="container">
+    <h3>Advice</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">solutionID</th>
+          <th scope="col">adviceID</th>
+          <th scope="col">comment</th>
+          <th scope="col">userID</th>
+          <th scope="col">Vote Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < advices.length; i++) {%>
+          <tr>
+            <td><%= advices[i].solutionID %></td>
+            <td><%= advices[i].adviceID %></td>
+            <td><%= advices[i].comment %></td>
+            <td><%= advices[i].userID %></td>
+            <td><%= advices[i].voteNum %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <div>
+      <h3>Create new Advice</h3>
+      <form action="/advice" method="post">
+        <input type="submit" class="btn btn-primary" value="Create">
+        <div class="input-group">
+          <label for="solution">Solution</label>
+          <select class="form-select" name="solution" required>
+            <% for(let i = 0; i < solutions.length; i++) {%>
+              <option value="<%= solutions[i].solutionID %>"><%= solutions[i].title %></option>
+            <% } %>
+          </select>
+        </div>
+        <div class="input-group">
+          <span class="input-group-text">Comment</span>
+          <textarea class="form-control" name='comment' required></textarea>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include('footer.ejs'); %>
