@@ -115,7 +115,13 @@ app.post('/problem', (req, res, next) => {
 // query: select all solution with all attribute and return
 // output render 'solution'
 app.get('/solution', (req, res) => {
-  res.render('solution', setUserToData({}));
+  const context = {};
+  connection.query('select * from Solution', (err, result) => {
+    if (err) next(err);
+
+    context.solutions = result;
+    res.render('solution', setUserToData(context));
+  });
 });
 // input: all attributes of solution
 // query: create a new solution
