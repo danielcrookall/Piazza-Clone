@@ -73,34 +73,46 @@ app.get('/user', (req, res) => {
 // Problem
 // input: nothing
 // query: select all problem with all attribute and return
-// output render 'problem' with problems key
-app.get('/problem', (req, res) => {
-  const context = {}
-    connection.query(`select * from Problem`, (err, result) => {
-      if (err) return next(err);
-      context.problems = result;
-      connection.query('select * from Course', (err2, result2) => {
-        if (err2) return next(err2);
-        context.courses = result2;
-        connection.query('select * from Type', (err3, result3) => {
-          if (err3) return next(err3);
-          context.types = result3;
-          res.render('problem', setUserToData(context));
-        });
+// output render 'problem', keys: problems, courses
+app.get('/problem', (req, res, next) => {
+  const context = {};
+  connection.query('select * from Problem', (err, result) => {
+    if (err) next(err);
+
+    context.problems = result;
+    connection.query('select * from Course', (err2, result2) => {
+      if (err2) next(err2);
+
+      context.courses = result2;
+      connection.query('select * from Type', (err3, result3) => {
+        if (err3) next(err3);
+
+        context.types = result3;
+        res.render('problem', setUserToData(context));
       });
     });
+  });
 });
 // input: all attribute for problem
 // query: create a new problem
 // output redirect '/problem'
-app.post('/problem', (req, res) => {
-  console.log(req.body);
-  res.redirect('/problem');
+app.post('/problem', (req, res, next) => {
+  // console.log(req.body);
+  const course = req.body.course.split(' ');
+  const department = course[0];
+  const courseNum = course[1];
+  const queryString = 'insert into Problem(title, body, userID, typeName, courseNum, department, difficulty) ' + 
+  `values('${req.body.title}', '${req.body.body}', ${userId}, 
+  '${req.body.typeName}', ${courseNum}, '${department}', ${req.body.difficulty});`
+  connection.query(queryString, (err, result) => {
+    if (err) next(err);
+    res.redirect('/problem');
+  })
 });
 
 // Solution
 // input: nothing
-// query: select all problem with all attribute and return
+// query: select all solution with all attribute and return
 // output render 'solution'
 app.get('/solution', (req, res) => {
   res.render('solution', setUserToData({}));
@@ -114,7 +126,7 @@ app.post('/solution', (req, res) => {
 
 // Advice
 // input: nothing
-// query: select all problem with all attribute and return
+// query: select all advice with all attribute and return
 // output render 'advice'
 app.get('/advice', (req, res) => {
   res.render('advice', setUserToData({}));

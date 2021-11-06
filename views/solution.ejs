@@ -1,0 +1,53 @@
+<%- include('header.ejs'); %>
+
+<main>
+  <div class="container">
+    <h3>Solution</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">solutionID</th>
+          <th scope="col">body</th>
+          <th scope="col">userID</th>
+          <th scope="col">problemID</th>
+          <th scope="col">Confidence Rate (%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < solutions.length; i++) {%>
+          <tr>
+            <td><%= solutions[i].solutionID %></td>
+            <td><%= solutions[i].body %></td>
+            <td><%= solutions[i].userID %></td>
+            <td><%= solutions[i].problemID %></td>
+            <td><%= solutions[i].confidence %> %</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <div>
+      <h3>Create new Solution</h3>
+      <form action="/problem" method="post">
+        <input type="submit" class="btn btn-primary" value="Create">
+        <div class="input-group">
+          <span class="input-group-text">Body</span>
+          <textarea class="form-control" name='body' required></textarea>
+        </div>
+        <div class="input-group">
+          <label for="difficulty" class="form-class">Confidence Rate</label>
+          <input type="range" name="confidence" class="form-range" min="0" max="100" step="5" id="confidence" required>
+        </div>
+        <div class="input-group">
+          <label for="course">Problem</label>
+          <select class="form-select" name="problem" required>
+            <% for(let i = 0; i < problem.length; i++) {%>
+              <option value="<%= problem.problemID %>"><%= problem[i].title %></option>
+            <% } %>
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include('footer.ejs'); %>
