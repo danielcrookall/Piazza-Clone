@@ -114,7 +114,7 @@ app.post('/problem', (req, res, next) => {
 // input: nothing
 // query: select all solution with all attribute and return
 // output render 'solution'
-app.get('/solution', (req, res) => {
+app.get('/solution', (req, res, next) => {
   const context = {};
   connection.query('select * from Solution', (err, result) => {
     if (err) next(err);
@@ -126,8 +126,7 @@ app.get('/solution', (req, res) => {
 
       context.problems = result2;
 
-      context.userID = userID;
-      res.render('problem', setUserToData(context));
+      res.render('solution', setUserToData(context));
       });
     });
 });
@@ -135,28 +134,28 @@ app.get('/solution', (req, res) => {
 // input: all attributes of solution
 // query: create a new solution
 // output render 'solution'
-app.post('/solution', (req, res) => {
+app.post('/solution', (req, res, next) => {
     // console.log(req.body);
     const queryString = 'insert into Solution(body, userID, problemID, confidence) ' + 
     `values('${req.body.body}', ${userId}, 
-    ${req.body.problemID}, ${req.body.confidence});`
+    ${req.body.problem}, ${req.body.confidence});`
     connection.query(queryString, (err, result) => {
       if (err) next(err);
       res.redirect('/solution');
-    })
+    });
 });
 
 // Advice
 // input: nothing
 // query: select all advice with all attribute and return
 // output render 'advice'
-app.get('/advice', (req, res) => {
+app.get('/advice', (req, res, next) => {
   res.render('advice', setUserToData({}));
 });
 // input: all attributes of advice
 // query: create a new advice
 // output render 'advice'
-app.post('/advice', (req, res) => {
+app.post('/advice', (req, res, next) => {
   res.redirect('/advice');
 });
 
@@ -165,14 +164,31 @@ app.post('/advice', (req, res) => {
 // input: nothing
 // query: select all problem with all attribute and return
 // output render 'advice-request'
-app.get('/advice-request', (req, res) => {
-  res.render('advice-request', setUserToData({}));
+app.get('/advice-request', (req, res, next) => {
+  const context = {};
+  connection.query('select * from AdviceRequest', (err, result) => {
+    if (err) next(err);
+
+    context.adviceRequests = result;
+    connection.query('select * from User', (err2, result2) => {
+      if (err2) next(err2);
+
+      context.users = result2;
+      res.render('advice-request', setUserToData(context));
+    });
+  });
 });
 // input: all attributes of advice-request
 // query: create a new advice-request
 // output render '/advice-request'
-app.post('/advice-request', (req, res) => {
-  res.redirect('/advice-request');
+app.post('/advice-request', (req, res, next) => {
+  console.log(req.body);
+  connection.query(`insert into AdviceRequest(body, requestType, userID) 
+  values('${req.body.body}', '${req.body.requestType}', '${req.body.user}')`, (err, result) => {
+    if (err) next(err);
+
+    res.redirect('/advice-request');
+  });
 });
 
 // Course
