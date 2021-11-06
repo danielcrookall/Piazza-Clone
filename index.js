@@ -128,9 +128,29 @@ app.post('/solution', (req, res) => {
 // input: nothing
 // query: select all advice with all attribute and return
 // output render 'advice'
-app.get('/advice', (req, res) => {
-  res.render('advice', setUserToData({}));
+app.get('/advice', (req, res, next) => {
+    const context = {};
+    connection.query('select * from Advice', (err,result) => {
+        if (err) next(err);
+
+        context.advice = result;
+    connection.query('select * from Solution', (err2, result2) =>  {
+        if (err2) next(err2);
+
+        context.solutions = result2;
+
+    connection.query('select * from VoteNumPosition', (err3, result3) => {
+        if (err3) next(err3);
+        context.positions = result3;
+
+        res.render('advice', setUserToData(context));
+
+    });
 });
+});
+});
+
+
 // input: all attributes of advice
 // query: create a new advice
 // output render 'advice'
