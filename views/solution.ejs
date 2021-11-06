@@ -27,21 +27,21 @@
     </table>
     <div>
       <h3>Create new Solution</h3>
-      <form action="/problem" method="post">
+      <form action="/solution" method="post">
         <input type="submit" class="btn btn-primary" value="Create">
         <div class="input-group">
           <span class="input-group-text">Body</span>
           <textarea class="form-control" name='body' required></textarea>
         </div>
         <div class="input-group">
-          <label for="difficulty" class="form-class">Confidence Rate</label>
+          <label for="confidence" class="form-class">Confidence Rate</label>
           <input type="range" name="confidence" class="form-range" min="0" max="100" step="5" id="confidence" required>
         </div>
         <div class="input-group">
-          <label for="course">Problem</label>
+          <label for="problem">Problem</label>
           <select class="form-select" name="problem" required>
-            <% for(let i = 0; i < problem.length; i++) {%>
-              <option value="<%= problem.problemID %>"><%= problem[i].title %></option>
+            <% for(let i = 0; i < problems.length; i++) {%>
+              <option value="<%= problems[i].problemID %>"><%= problems[i].title %></option>
             <% } %>
           </select>
         </div>
