@@ -150,40 +150,30 @@ app.post('/solution', (req, res, next) => {
 // query: select all advice with all attribute and return
 // output render 'advice'
 app.get('/advice', (req, res, next) => {
-    const context = {};
-    connection.query('select * from Advice', (err,result) => {
-        if (err) next(err);
+  const context = {};
+  connection.query('select * from Advice', (err,result) => {
+    if (err) next(err);
 
-        context.advices = result;
+    context.advices = result;
     connection.query('select * from Solution', (err2, result2) =>  {
-        if (err2) next(err2);
+    if (err2) next(err2);
 
-        context.solutions = result2;
-
-    connection.query('select * from VoteNumPosition', (err3, result3) => {
-        if (err3) next(err3);
-        context.positions = result3;
-
-        res.render('advice', setUserToData(context));
-
+    context.solutions = result2;
+    res.render('advice', setUserToData(context));
     });
+  });
 });
-});
-});
-
-
-
 // input: all attributes of advice
 // query: create a new advice
 // output render 'advice'
 app.post('/advice', (req, res, next) => {
   let randomInt = getRandomInt(0,10000);
   console.log(req.body);
-  connection.query(`insert into Advice(solutionID, adviceID, comment, userID, voteNum)
-  values('${req.body.solutionID}', '${randomInt}', '${req.body.comment}', '${req.body.user}', '${req.body.voteNum}')`, (err, result) => {
+  connection.query(`insert into Advice(solutionID, adviceID, comment, userID)
+  values(${req.body.solution}, ${randomInt}, '${req.body.comment}', ${userId})`, (err, result) => {
     if (err) next(err);
 
-  res.redirect('/advice');
+    res.redirect('/advice');
   });
 });
 
@@ -216,7 +206,7 @@ app.get('/advice-request', (req, res, next) => {
 // query: create a new advice-request
 // output render '/advice-request'
 app.post('/advice-request', (req, res, next) => {
-  console.log(req.body);
+  // console.log(req.body);
   connection.query(`insert into AdviceRequest(body, requestType, userID) 
   values('${req.body.body}', '${req.body.requestType}', '${req.body.user}')`, (err, result) => {
     if (err) next(err);
