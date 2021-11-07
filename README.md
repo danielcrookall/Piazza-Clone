@@ -2,7 +2,8 @@
 1. 
   - clone this repo
   - move to the repository directory
-  - run ```npm install```
+  - run ```npm install``` 
+  
 2.
   - create `.env` file
   - write your environment variable
