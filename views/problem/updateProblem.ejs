@@ -1,0 +1,114 @@
+<%- include('../partials/header.ejs'); %>
+
+<main>
+  <div class="container">
+    <h3>Problems -- Update Operation</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">problemID</th>
+          <th scope="col">title</th>
+          <th scope="col">body</th>
+          <th scope="col">userID</th>
+          <th scope="col">Problem Type</th>
+          <th scope="col">Course Number</th>
+          <th scope="col">Department</th>
+          <th scope="col">Difficulty</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < problems.length; i++) {%>
+          <tr>
+            <td><%= problems[i].problemID %></td>
+            <td><%= problems[i].title %></td>
+            <td><%= problems[i].body %></td>
+            <td><%= problems[i].userID %></td>
+            <td><%= problems[i].typeName %></td>
+            <td><%= problems[i].courseNum %></td>
+            <td><%= problems[i].department %></td>
+            <td><%= problems[i].difficulty %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <div>
+      <h3>Update Problems with following condition</h3>
+      <form action="/problem/update" method="post">
+        <button class="btn btn-warning btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#update">Update</button>
+        <p class="bg-info">Example: nubmer => column=1, string => 'test', unequal sign => <></p>
+        <p class="bg-info">Example: contains text => column like '%test%'</p>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">Condition</span>
+          <input type="text" name="condition" class="form-control"
+            placeholder="Example: columnA=1 and columnB<>3" required>
+        </div>
+        <div class="modal fade" id="update" role="dialog">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Update</h4>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <h5>Are you sure to update ?</h5>
+                <input type="submit" class="btn btn-warning" value="Update" />
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex;">
+          <p>Choose which attributes to update:  </p>
+          <div>
+            <input class="form-check-input" type="checkbox" name="title-column" value="1">
+            <label class="form-check-label" for="title-column">Title</label>
+          </div>
+          <div>
+            <input class="form-check-input" type="checkbox" name="body-column" value="1">
+            <label class="form-check-label" for="body-column">Body</label>
+          </div>
+          <div>
+            <input class="form-check-input" type="checkbox" name="diff-column" value="1">
+            <label class="form-check-label" for="diff-column">Difficulty</label>
+          </div>
+          <div>
+            <input class="form-check-input" type="checkbox" name="course-column" value="1">
+            <label class="form-check-label" for="course-column">Course</label>
+          </div>
+          <div>
+            <input class="form-check-input" type="checkbox" name="type-column" value="1">
+            <label class="form-check-label" for="type-column">Problem Type</label>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">Title</span>
+          <input type="text" name='title' class="form-control">
+        </div>
+        <div class="input-group">
+          <span class="input-group-text">Body</span>
+          <textarea class="form-control" name='body'></textarea>
+        </div>
+        <div class="input-group">
+          <label for="difficulty" class="form-class">Difficulty</label>
+          <input type="range" name="difficulty" class="form-range" min="0" max="5" step="0.5" id="difficulty">
+        </div>
+        <div class="input-group">
+          <label for="course">Course</label>
+          <select class="form-select" name="course">
+            <% for(let i = 0; i < courses.length; i++) {%>
+              <option value="<%= courses[i].department %> <%= courses[i].courseNum %>"><%= courses[i].department %> <%= courses[i].courseNum %></option>
+            <% } %>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="typeName">Problem Type</label>
+          <select class="form-select" name="typeName">
+            <% for(let i = 0; i < types.length; i++) {%>
+              <option value="<%= types[i].typeName %>"><%= types[i].typeName %></option>
+            <% } %>
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>

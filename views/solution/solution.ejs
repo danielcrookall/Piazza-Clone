@@ -1,8 +1,12 @@
-<%- include('./partials/header.ejs'); %>
+<%- include('../partials/header.ejs'); %>
 
 <main>
   <div class="container">
-    <h3>Solution</h3>
+    <div>
+      <h3>Solution</h3>
+      <a href="/solution/delete" class="btn btn-danger">detele operation</a>
+      <a href="/solution/update" class="btn btn-warning">update operation</a>
+    </div>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -50,4 +54,4 @@
   </div>
 </main>
 
-<%- include('./partials/footer.ejs'); %>
+<%- include('../partials/footer.ejs'); %>

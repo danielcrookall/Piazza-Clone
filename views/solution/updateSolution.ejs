@@ -1,0 +1,91 @@
+<%- include('../partials/header.ejs'); %>
+
+<main>
+  <div class="container">
+    <h3>Solution -- Update Operation</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">solutionID</th>
+          <th scope="col">body</th>
+          <th scope="col">userID</th>
+          <th scope="col">problemID</th>
+          <th scope="col">Confidence Rate (%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < solutions.length; i++) {%>
+          <tr>
+            <td><%= solutions[i].solutionID %></td>
+            <td><%= solutions[i].body %></td>
+            <td><%= solutions[i].userID %></td>
+            <td><%= solutions[i].problemID %></td>
+            <td><%= solutions[i].confidence %> %</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <div>
+      <h3>Update Solutions with following condition</h3>
+      <form action="/solution" method="post">
+        <button class="btn btn-warning btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#update">Update</button>
+        <p class="bg-info">Example: nubmer => column=1, string => 'test', unequal sign => <></p>
+        <p class="bg-info">Example: contains text => column like '%test%'</p>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">Condition</span>
+          <input type="text" name="condition" class="form-control"
+            placeholder="Example: columnA=1 and columnB<>3" required>
+        </div>
+        <div class="modal fade" id="update" role="dialog">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Update</h4>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <h5>Are you sure to update ?</h5>
+                <input type="submit" class="btn btn-warning" value="Update" />
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex;">
+          <p>Choose which attributes to update:  </p>
+          <div>
+            <input class="form-check-input" type="checkbox" name="body-column" value="1">
+            <label class="form-check-label" for="body-column">Body</label>
+          </div>
+          <div>
+            <input class="form-check-input" type="checkbox" name="confidence-column" value="1">
+            <label class="form-check-label" for="confidence-column">Confidence Rate</label>
+          </div>
+          <div>
+            <input class="form-check-input" type="checkbox" name="problem-column" value="1">
+            <label class="form-check-label" for="problem-column">Problem</label>
+          </div>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Create">
+        <div class="input-group">
+          <span class="input-group-text">Body</span>
+          <textarea class="form-control" name='body' required></textarea>
+        </div>
+        <div class="input-group">
+          <label for="confidence" class="form-class">Confidence Rate</label>
+          <input type="range" name="confidence" class="form-range" min="0" max="100" step="5" id="confidence" required>
+        </div>
+        <div class="input-group">
+          <label for="problem">Problem</label>
+          <select class="form-select" name="problem" required>
+            <% for(let i = 0; i < problems.length; i++) {%>
+              <option value="<%= problems[i].problemID %>"><%= problems[i].title %></option>
+            <% } %>
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer.ejs'); %>
