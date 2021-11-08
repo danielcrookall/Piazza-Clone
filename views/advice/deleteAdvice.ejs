@@ -1,0 +1,58 @@
+<%- include('../partials/header.ejs'); %>
+
+<main>
+  <div class="container">
+    <h3>Advice -- Delete Operation</h3>
+    <div>
+      <form action="/advice/delete" method="post">
+        <button class="btn btn-danger btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#delete">Delete</button>
+        <p class="bg-info">Example: nubmer => solutionID=1, string => 'test', unequal sign => <></p>
+        <p class="bg-info">Example: contains text => column like '%test%'</p>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">Condition</span>
+          <input type="text" name="condition" class="form-control"
+            placeholder="Example: columnA=1 and columnB<>3" required>
+        </div>
+        <div class="modal fade" id="delete" role="dialog">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Delete</h4>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <h5>Are you sure to delete ?</h5>
+                <input type="submit" class="btn btn-danger" value="Delete" />
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">solutionID</th>
+          <th scope="col">adviceID</th>
+          <th scope="col">comment</th>
+          <th scope="col">userID</th>
+          <th scope="col">Vote Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < advices.length; i++) {%>
+          <tr>
+            <td><%= advices[i].solutionID %></td>
+            <td><%= advices[i].adviceID %></td>
+            <td><%= advices[i].comment %></td>
+            <td><%= advices[i].userID %></td>
+            <td><%= advices[i].voteNum %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<%- include('../partials/footer.ejs'); %>

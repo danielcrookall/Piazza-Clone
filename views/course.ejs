@@ -13,8 +13,8 @@
       <tbody>
         <% for(let i = 0; i < courses.length; i++) {%>
           <tr>
-            <td><%= courses[i][1] %> </td>
-            <td><%= courses[i][0] %> </td>
+            <td><%= courses[i].department %> </td>
+            <td><%= courses[i].courseNum %> </td>
           </tr>
         <% } %>
       </tbody>
@@ -26,7 +26,7 @@
         <form action="/register" method="post">
           <select class="form-select" name="register" id="department">
             <% for(let i = 0; i < courses.length; i++) {%>
-              <option value="<%= courses[i][1] %> <%= courses[i][0] %>"><%= courses[i][1] %> <%= courses[i][0] %></option>
+              <option value="<%= courses[i].department %> <%= courses[i].courseNum %>"><%= courses[i].department %> <%= courses[i].courseNum %></option>
             <% } %>
           </select>
           <input type="submit" class="btn btn-primary" value="register">

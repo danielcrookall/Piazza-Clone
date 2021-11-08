@@ -77,18 +77,18 @@ app.get('/user', (req, res) => {
 app.get('/problem', (req, res, next) => {
   const context = {};
   connection.query('select * from Problem', (err, result) => {
-    if (err) next(err);
+    if (err) return next(err);
 
     context.problems = result;
     connection.query('select * from Course', (err2, result2) => {
-      if (err2) next(err2);
+      if (err2) return next(err2);
 
       context.courses = result2;
       connection.query('select * from Type', (err3, result3) => {
-        if (err3) next(err3);
+        if (err3) return next(err3);
 
         context.types = result3;
-        res.render('problem', setUserToData(context));
+        res.render('problem/problem', setUserToData(context));
       });
     });
   });
@@ -105,9 +105,56 @@ app.post('/problem', (req, res, next) => {
   `values('${req.body.title}', '${req.body.body}', ${userId}, 
   '${req.body.typeName}', ${courseNum}, '${department}', ${req.body.difficulty});`
   connection.query(queryString, (err, result) => {
-    if (err) next(err);
+    if (err) return next(err);
     res.redirect('/problem');
   })
+});
+app.get('/problem/update', (req, res, next) => {
+  const context = {};
+  connection.query('select * from Problem', (err, result) => {
+    if (err) return next(err);
+
+    context.problems = result;
+    connection.query('select * from Course', (err2, result2) => {
+      if (err2) return next(err2);
+
+      context.courses = result2;
+      connection.query('select * from Type', (err3, result3) => {
+        if (err3) return next(err3);
+
+        context.types = result3;
+        res.render('problem/updateProblem', setUserToData(context));
+      });
+    });
+  });
+});
+app.post('/problem/update', (req, res, next) => {
+  const setColumns = [];
+  if (req.body['title-column']) {
+    setColumns.push(`title='${req.body.title}'`);
+  }
+  if (req.body['body-column']) {
+    setColumns.push(`body='${req.body.body}'`);
+  }
+  if (req.body['diff-column']) {
+    setColumns.push(`difficulty=${req.body.difficulty}`);
+  }
+  if (req.body['course-column']) {
+    const course = req.body.course.split(' ');
+    const department = course[0];
+    const courseNum = course[1];
+    setColumns.push(`courseNum=${courseNum}`);
+    setColumns.push(`department='${department}'`);
+  }
+  if (req.body['type-column']) {
+    setColumns.push(`typeName='${req.body.typeName}'`);
+  }
+  const setString = setColumns.join(', ');
+  connection.query(`update Problem set ${setString} where ${req.body.condition};`, (err, result) => {
+    if (err) return next(err);
+
+    res.redirect('/problem');
+  });
 });
 
 // Solution
@@ -117,20 +164,19 @@ app.post('/problem', (req, res, next) => {
 app.get('/solution', (req, res, next) => {
   const context = {};
   connection.query('select * from Solution', (err, result) => {
-    if (err) next(err);
+    if (err) return next(err);
 
     context.solutions = result;
     
     connection.query('select * from Problem', (err2, result2) => {
-      if (err2) next(err2);
+      if (err2) return next(err2);
 
       context.problems = result2;
 
-      res.render('solution', setUserToData(context));
+      res.render('solution/solution', setUserToData(context));
       });
     });
 });
-
 // input: all attributes of solution
 // query: create a new solution
 // output render 'solution'
@@ -140,9 +186,25 @@ app.post('/solution', (req, res, next) => {
     `values('${req.body.body}', ${userId}, 
     ${req.body.problem}, ${req.body.confidence});`
     connection.query(queryString, (err, result) => {
-      if (err) next(err);
+      if (err) return next(err);
       res.redirect('/solution');
     });
+});
+// update solution
+app.get('/solution/update', (req, res, next) => {
+  res.render('solution/updateSolution', setUserToData({}));
+});
+// passed req.body: 
+app.post('/solution/update', (req, res, next) => {
+  res.redirect('/solution');
+});
+// delete solution
+app.get('/solution/delete', (req, res, next) => {
+  res.render('solution/deleteSolution', setUserToData({}));
+});
+// query: delete an solution
+app.post('/solution/delete', (req, res, next) => {
+  res.redirect('/solution');
 });
 
 // Advice
@@ -152,14 +214,14 @@ app.post('/solution', (req, res, next) => {
 app.get('/advice', (req, res, next) => {
   const context = {};
   connection.query('select * from Advice', (err,result) => {
-    if (err) next(err);
+    if (err) return next(err);
 
     context.advices = result;
     connection.query('select * from Solution', (err2, result2) =>  {
-    if (err2) next(err2);
+    if (err2) return next(err2);
 
     context.solutions = result2;
-    res.render('advice', setUserToData(context));
+    res.render('advice/advice', setUserToData(context));
     });
   });
 });
@@ -168,10 +230,32 @@ app.get('/advice', (req, res, next) => {
 // output render 'advice'
 app.post('/advice', (req, res, next) => {
   let randomInt = getRandomInt(0,10000);
-  console.log(req.body);
   connection.query(`insert into Advice(solutionID, adviceID, comment, userID)
   values(${req.body.solution}, ${randomInt}, '${req.body.comment}', ${userId})`, (err, result) => {
-    if (err) next(err);
+    if (err) return next(err);
+
+    connection.query(`insert into VoteRecord(status, solutionID, adviceID, userID)
+    values('normal', ${req.body.solution}, ${randomInt}, ${userId})`, (err2, result2) => {
+      if (err2) return next(err2);
+
+      res.redirect('/advice');
+    });
+  });
+});
+app.get('/advice/delete', (req, res, next) => {
+  const context = {};
+  connection.query('select * from Advice', (err,result) => {
+    if (err) return next(err);
+
+    context.advices = result;
+    res.render('advice/deleteAdvice', setUserToData(context));
+  });
+});
+// query: delete an advice
+app.post('/advice/delete', (req, res, next) => {
+  const condition = req.body.condition;
+  connection.query(`delete from Advice where ${condition};`, (err, result) => {
+    if (err) return next(err);
 
     res.redirect('/advice');
   });
@@ -191,11 +275,11 @@ function getRandomInt(min, max) {
 app.get('/advice-request', (req, res, next) => {
   const context = {};
   connection.query('select * from AdviceRequest', (err, result) => {
-    if (err) next(err);
+    if (err) return next(err);
 
     context.adviceRequests = result;
     connection.query('select * from User', (err2, result2) => {
-      if (err2) next(err2);
+      if (err2) return next(err2);
 
       context.users = result2;
       res.render('advice-request', setUserToData(context));
@@ -209,7 +293,7 @@ app.post('/advice-request', (req, res, next) => {
   // console.log(req.body);
   connection.query(`insert into AdviceRequest(body, requestType, userID) 
   values('${req.body.body}', '${req.body.requestType}', '${req.body.user}')`, (err, result) => {
-    if (err) next(err);
+    if (err) return next(err);
 
     res.redirect('/advice-request');
   });
@@ -218,21 +302,15 @@ app.post('/advice-request', (req, res, next) => {
 // Course
 app.get('/course', (req, res, next) => {
   const context = {};
-  const testData = [
-    [304, 'CPSC'],
-    [322, 'CPSC'],
-    [213, 'CPSC'],
-    [200, 'MATH'],
-    [221, 'MATH'],
-    [112, 'ENGL'],
-    [302, 'MATH'],
-    [101, 'PHYS']
-  ];
-  context.courses = testData;
-  connection.query(`select * from Register where userID=${userId}`, (err, result) => {
-    if (err) return next(err);
-    context.registerCourses = result;
-    res.render('course', setUserToData(context));
+  connection.query('select * from Register', (err1, result1) => {
+    if (err1) return next(err1);
+
+    context.courses = result1;
+    connection.query(`select * from Register where userID=${userId}`, (err, result) => {
+      if (err) return next(err);
+      context.registerCourses = result;
+      res.render('course', setUserToData(context));
+    });
   });
 });
 app.post('/register', (req, res, next) => {
