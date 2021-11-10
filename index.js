@@ -70,8 +70,21 @@ app.get('/user', (req, res) => {
     res.render('user', setUserToData({}));
 });
 
+const getFields = async (tableName) => {
+  return new Promise((resolve, reject) => {
+    connection.query(`show columns from ${tableName}`, (err, result) => {
+      if (err) return reject(err);
+
+      const fields = [];
+      result.forEach(row => {
+        fields.push(row.Field);
+      });
+      return resolve(fields);
+    });
+  });
+}
 // Select
-app.get('/select', (req, res, next) => {
+app.get('/select', async (req, res, next) => {
   const context = {
     tableNames: [
       'User', 'Type',
@@ -83,9 +96,14 @@ app.get('/select', (req, res, next) => {
     ],
     table: null,
   };
+  for (let i = 0; i < context.tableNames.length; i++) {
+    const tableName = context.tableNames[i];
+    const fields = await getFields(tableName);
+    context[`${tableName}Columns`] = fields;
+  }
   res.render('select', setUserToData(context));
 });
-app.post('/select', (req, res, next) => {
+app.post('/select', async (req, res, next) => {
   const context = {
     tableNames: [
       'User', 'Type',
@@ -96,7 +114,28 @@ app.post('/select', (req, res, next) => {
       'Advice', 'VoteRecord'
     ],
   };
-  const projectString = (req.body.columns === '') ? '*' : req.body.columns;
+  for (let i = 0; i < context.tableNames.length; i++) {
+    const tableName = context.tableNames[i];
+    const fields = await getFields(tableName);
+    context[`${tableName}Columns`] = fields;
+  }
+
+  const tableName = req.body.tableName;
+  const fields = context[`${tableName}Columns`];
+
+  const projectColumns = [];
+  fields.forEach(col => {
+    if (req.body[`${col}-column`]) {
+      projectColumns.push(col);
+    }
+  });
+  let projectString = '';
+  if (projectColumns.length === 0) {
+    projectString = '*';
+  } else {
+    projectString = projectColumns.join(', ');
+  }
+
   const conditionString = (req.body.condition !== '') ? ` where ${req.body.condition}`: '';
   connection.query(`select ${projectString} from ${req.body.tableName}${conditionString}`, (err, result) => {
     if (err) return next(err);
