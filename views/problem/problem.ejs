@@ -6,6 +6,32 @@
       <h3>Problems</h3>
       <a href="/problem/update" class="btn btn-warning">update operation</a>
     </div>
+    <div style="display: flex;">
+      <p style="margin-right: 10px; font-size: large;">Filter</p>
+      <form action="/problem/select" method="post" style="display: flex;">
+        <div>
+          <input class="form-check-input" type="checkbox" name="title-column" value="1">
+          <label class="form-check-label" for="title-column">Title</label>
+        </div>
+        <div>
+          <input class="form-check-input" type="checkbox" name="body-column" value="1">
+          <label class="form-check-label" for="body-column">Body</label>
+        </div>
+        <div>
+          <input class="form-check-input" type="checkbox" name="diff-column" value="1">
+          <label class="form-check-label" for="diff-column">Difficulty</label>
+        </div>
+        <div>
+          <input class="form-check-input" type="checkbox" name="course-column" value="1">
+          <label class="form-check-label" for="course-column">Course</label>
+        </div>
+        <div>
+          <input class="form-check-input" type="checkbox" name="type-column" value="1">
+          <label class="form-check-label" for="type-column">Problem Type</label>
+        </div>
+        <input type="submit" class="btn btn-info" value="Select"/>
+      </form>
+    </div>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -13,23 +39,54 @@
           <th scope="col">title</th>
           <th scope="col">body</th>
           <th scope="col">userID</th>
-          <th scope="col">Problem Type</th>
-          <th scope="col">Course Number</th>
-          <th scope="col">Department</th>
-          <th scope="col">Difficulty</th>
+          <th scope="col">Problem Type (typeName)</th>
+          <th scope="col">Course Number (courseNum)</th>
+          <th scope="col">Department (department)</th>
+          <th scope="col">Difficulty (difficulty)</th>
         </tr>
       </thead>
       <tbody>
         <% for(let i = 0; i < problems.length; i++) {%>
           <tr>
-            <td><%= problems[i].problemID %></td>
-            <td><%= problems[i].title %></td>
-            <td><%= problems[i].body %></td>
-            <td><%= problems[i].userID %></td>
-            <td><%= problems[i].typeName %></td>
-            <td><%= problems[i].courseNum %></td>
-            <td><%= problems[i].department %></td>
-            <td><%= problems[i].difficulty %></td>
+            <% if (problems[i].problemID) { %>
+              <td><%= problems[i].problemID %></td>
+            <% } else { %>
+            <% } %>
+            <% if (problems[i].title) { %>
+              <td><%= problems[i].title %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <% if (problems[i].body) { %>
+              <td><%= problems[i].body %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <% if (problems[i].userID) { %>
+              <td><%= problems[i].userID %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <% if (problems[i].typeName) { %>
+              <td><%= problems[i].typeName %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <% if (problems[i].courseNum) { %>
+              <td><%= problems[i].courseNum %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <% if (problems[i].department) { %>
+              <td><%= problems[i].department %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <% if (problems[i].difficulty) { %>
+              <td><%= problems[i].difficulty %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
           </tr>
         <% } %>
       </tbody>
@@ -70,4 +127,3 @@
     </div>
   </div>
 </main>
-<%- include('../partials/footer.ejs'); %>

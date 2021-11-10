@@ -70,6 +70,59 @@ app.get('/user', (req, res) => {
     res.render('user', setUserToData({}));
 });
 
+// Select
+app.get('/select', (req, res, next) => {
+  const context = {
+    tableNames: [
+      'User', 'Type',
+      'DepartmentFaculty', 'Course',
+      'Register', 'Problem',
+      'Admin', 'Solution',
+      'AdviceRequest', 'VoteNumPosition',
+      'Advice', 'VoteRecord'
+    ],
+    table: null,
+  };
+  res.render('select', setUserToData(context));
+});
+app.post('/select', (req, res, next) => {
+  const context = {
+    tableNames: [
+      'User', 'Type',
+      'DepartmentFaculty', 'Course',
+      'Register', 'Problem',
+      'Admin', 'Solution',
+      'AdviceRequest', 'VoteNumPosition',
+      'Advice', 'VoteRecord'
+    ],
+  };
+  const projectString = (req.body.columns === '') ? '*' : req.body.columns;
+  const conditionString = (req.body.condition !== '') ? ` where ${req.body.condition}`: '';
+  connection.query(`select ${projectString} from ${req.body.tableName}${conditionString}`, (err, result) => {
+    if (err) return next(err);
+
+    if (result.length <= 0) {
+      return res.redirect('/select');
+    }
+
+    context.table = {};
+    context.table.tableName = req.body.tableName;
+    context.table.thead = [];
+    Object.keys(result[0]).forEach(key => {
+      context.table.thead.push(key);
+    })
+    context.table.tbody = [];
+    for (let i = 0; i < result.length; i++) {
+      const row = [];
+      Object.keys(result[i]).forEach(key => {
+        row.push(result[i][key]);
+      });
+      context.table.tbody.push(row);
+    }
+    return res.render('select', setUserToData(context));
+  });
+});
+
 // Problem
 // input: nothing
 // query: select all problem with all attribute and return
@@ -150,10 +203,50 @@ app.post('/problem/update', (req, res, next) => {
     setColumns.push(`typeName='${req.body.typeName}'`);
   }
   const setString = setColumns.join(', ');
-  connection.query(`update Problem set ${setString} where ${req.body.condition};`, (err, result) => {
+  const problemID = `problemID${req.body['problemid-op']}${req.body['problemid-opd']}`;
+  connection.query(`update Problem set ${setString} where ${problemID};`, (err, result) => {
     if (err) return next(err);
 
     res.redirect('/problem');
+  });
+});
+app.post('/problem/select', (req, res, next) => {
+  const projectColumns = ['problemID', 'userID'];
+  if (req.body['title-column']) {
+    projectColumns.push('title');
+  }
+  if (req.body['body-column']) {
+    projectColumns.push('body');
+  }
+  if (req.body['diff-column']) {
+    projectColumns.push('difficulty');
+  }
+  if (req.body['course-column']) {
+    projectColumns.push('department');
+    projectColumns.push('courseNum');
+  }
+  if (req.body['type-column']) {
+    projectColumns.push('typeName');
+  }
+
+  const projectString = projectColumns.join(', ');
+  const context = {};
+  
+  connection.query(`select ${projectString} from Problem`, (err, result) => {
+    if (err) return next(err);
+
+    context.problems = result;
+    connection.query('select * from Course', (err2, result2) => {
+      if (err2) return next(err2);
+
+      context.courses = result2;
+      connection.query('select * from Type', (err3, result3) => {
+        if (err3) return next(err3);
+
+        context.types = result3;
+        res.render('problem/problem', setUserToData(context));
+      });
+    });
   });
 });
 
@@ -269,11 +362,39 @@ app.get('/advice/delete', (req, res, next) => {
 });
 // query: delete advice
 app.post('/advice/delete', (req, res, next) => {
-  const condition = req.body.condition;
-  connection.query(`delete from Advice where ${condition};`, (err, result) => {
+  const solutionID = `solutionID${req.body['solutionid-op']}${req.body['solutionid-opd']}`;
+  const adviceID = `adviceID${req.body['adviceid-op']}${req.body['adviceid-opd']}`;
+  connection.query(`delete from Advice where ${solutionID} and ${adviceID};`, (err, result) => {
     if (err) return next(err);
 
     res.redirect('/advice');
+  });
+});
+app.post('/advice/select', (req, res, next) => {
+  const projectColumns = ['solutionID', 'adviceID'];
+  if (req.body['comment-column']) {
+    projectColumns.push('comment');
+  }
+  if (req.body['userid-column']) {
+    projectColumns.push('userID');
+  }
+  if (req.body['votenum-column']) {
+    projectColumns.push('voteNum');
+  }
+
+  const projectString = projectColumns.join(', ');
+
+  const context = {};
+  connection.query(`select ${projectString} from Advice`, (err,result) => {
+    if (err) return next(err);
+
+    context.advices = result;
+    connection.query('select * from Solution', (err2, result2) =>  {
+    if (err2) return next(err2);
+
+    context.solutions = result2;
+    res.render('advice/advice', setUserToData(context));
+    });
   });
 });
 
