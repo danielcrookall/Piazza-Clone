@@ -1,0 +1,53 @@
+<%- include('./partials/header.ejs'); %>
+
+<main>
+  <div class="container">
+    <h3>Searching</h3>
+    <div>
+      <form action="/select" method="post">
+        <div class="input-group">
+          <label for="solution">Table</label>
+          <select class="form-select" name="tableName" required>
+            <% for(let i = 0; i < tableNames.length; i++) {%>
+              <option value="<%= tableNames[i] %>"><%= tableNames[i] %></option>
+            <% } %>
+          </select>
+        </div>
+        <div>
+          <span class="input-group-text" id="basic-addon1">Columns</span>
+          <input type="text" name="columns" class="form-control"
+            placeholder="Example: columnA, columnB">
+        </div>
+        <div class="input-group">
+          <span class="input-group-text" id="basic-addon1">Condition</span>
+          <input type="text" name="condition" class="form-control"
+            placeholder="Example: columnA=1 and columnB<>3">
+        </div>
+        <input type="submit" class="btn btn-info" value="Submit">
+      </form>
+    </div>
+    <% if (table !== null) { %>
+      <h3><%= table.tableName %> </h3>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <% for (let i = 0; i < table.thead.length; i++) { %>
+              <th scope="col">
+                <%= table.thead[i] %> 
+              </th>
+            <% } %>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (let i = 0; i < table.tbody.length; i++) { %>
+            <tr>
+              <% for (let j = 0; j < table.tbody[i].length; j++) { %>
+                <td><%= table.tbody[i][j] %> </td>
+              <% } %>
+            </tr>
+          <% } %> 
+        </tbody>
+      </table>
+    <% } %> 
+  </div>
+</main>

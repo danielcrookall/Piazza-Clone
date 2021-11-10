@@ -35,12 +35,17 @@
       <h3>Update Problems with following condition</h3>
       <form action="/problem/update" method="post">
         <button class="btn btn-warning btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#update">Update</button>
-        <p class="bg-info">Example: nubmer => column=1, string => 'test', unequal sign => <></p>
-        <p class="bg-info">Example: contains text => column like '%test%'</p>
         <div class="input-group mb-3">
-          <span class="input-group-text" id="basic-addon1">Condition</span>
-          <input type="text" name="condition" class="form-control"
-            placeholder="Example: columnA=1 and columnB<>3" required>
+          <span class="input-group-text" id="basic-addon1">Problem ID</span>
+          <select class="form-select" name="problemid-op" style="max-width: 100px;" required>
+            <option value="=">=</option>
+            <option value="<>">not equal</option>
+            <option value=">">></option>
+            <option value="<"><</option>
+            <option value=">=">>=</option>
+            <option value="<="><=</option>
+          <input type="text" name="problemid-opd" class="form-control"
+            placeholder="value" required>
         </div>
         <div class="modal fade" id="update" role="dialog">
           <div class="modal-dialog modal-lg">

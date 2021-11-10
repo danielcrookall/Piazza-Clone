@@ -6,6 +6,24 @@
       <h3>Advice</h3>
       <a href="/advice/delete" class="btn btn-danger">detele operation</a>
     </div>
+    <div style="display: flex;">
+      <p style="margin-right: 10px; font-size: large;">Filter</p>
+      <form action="/advice/select" method="post" style="display: flex;">
+        <div>
+          <input class="form-check-input" type="checkbox" name="comment-column" value="1">
+          <label class="form-check-label" for="comment-column">comment</label>
+        </div>
+        <div style="margin: 5px;">
+          <input class="form-check-input" type="checkbox" name="userid-column" value="1">
+          <label class="form-check-label" for="userid-column">userID</label>
+        </div>
+        <div>
+          <input class="form-check-input" type="checkbox" name="votenum-column" value="1">
+          <label class="form-check-label" for="votenum-column">Vote Num</label>
+        </div>
+        <input type="submit" class="btn btn-info" value="Select"/>
+      </form>
+    </div>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -13,17 +31,33 @@
           <th scope="col">adviceID</th>
           <th scope="col">comment</th>
           <th scope="col">userID</th>
-          <th scope="col">Vote Number</th>
+          <th scope="col">Vote Number (voteNum)</th>
         </tr>
       </thead>
       <tbody>
         <% for(let i = 0; i < advices.length; i++) {%>
           <tr>
-            <td><%= advices[i].solutionID %></td>
+            <% if (advices[i].solutionID) { %>
+              <td><%= advices[i].solutionID %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
             <td><%= advices[i].adviceID %></td>
-            <td><%= advices[i].comment %></td>
-            <td><%= advices[i].userID %></td>
-            <td><%= advices[i].voteNum %></td>
+            <% if (advices[i].comment) { %>
+              <td><%= advices[i].comment %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <% if (advices[i].userID) { %>
+              <td><%= advices[i].userID %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <% if (advices[i].voteNum >= 0 || advices[i].voteNum < 0) { %>
+              <td><%= advices[i].voteNum %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
           </tr>
         <% } %>
       </tbody>
