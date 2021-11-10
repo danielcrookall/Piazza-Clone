@@ -291,13 +291,27 @@ app.get('/solution/update', (req, res, next) => {
 app.post('/solution/update', (req, res, next) => {
   res.redirect('/solution');
 });
+
+
 // delete solution
 app.get('/solution/delete', (req, res, next) => {
-  res.render('solution/deleteSolution', setUserToData({}));
+  const context = {};
+  connection.query('select * from Solution', (err,result) => {
+    if (err) return next(err);
+
+    context.solutions = result;
+    res.render('solution/deleteSolution', setUserToData(context));
+  }); 
 });
-// query: delete an solution
+
+// query: delete a solution
 app.post('/solution/delete', (req, res, next) => {
-  res.redirect('/solution');
+  const condition = req.body.condition;
+  connection.query(`delete from Solution where ${condition};`, (err,result) => {
+    if (err) return next(err);
+
+    res.redirect('/solution');
+  });
 });
 
 // Advice
@@ -335,6 +349,8 @@ app.post('/advice', (req, res, next) => {
     });
   });
 });
+
+//delete advice
 app.get('/advice/delete', (req, res, next) => {
   const context = {};
   connection.query('select * from Advice', (err,result) => {
@@ -344,7 +360,7 @@ app.get('/advice/delete', (req, res, next) => {
     res.render('advice/deleteAdvice', setUserToData(context));
   });
 });
-// query: delete an advice
+// query: delete advice
 app.post('/advice/delete', (req, res, next) => {
   const solutionID = `solutionID${req.body['solutionid-op']}${req.body['solutionid-opd']}`;
   const adviceID = `adviceID${req.body['adviceid-op']}${req.body['adviceid-opd']}`;
