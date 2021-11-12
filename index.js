@@ -345,7 +345,7 @@ app.get('/solution/delete', (req, res, next) => {
 
 // query: delete a solution
 app.post('/solution/delete', (req, res, next) => {
-  const solutionID = `solutionID${req.body['solutionid-opa']}${req.body['solutionid-opda']}`;
+  const solutionID = `solutionID${req.body['solutionid-op']}${req.body['solutionid-opd']}`;
   connection.query(`delete from Solution where ${solutionID};`, (err, result) => {
     if (err) return next(err);
 
