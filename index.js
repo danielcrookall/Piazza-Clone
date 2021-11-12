@@ -353,20 +353,6 @@ app.post('/solution/delete', (req, res, next) => {
   });
 });
 
-
-
-//   const condition = req.body.condition;
-//   connection.query(`delete from Solution where ${condition};`, (err,result) => {
-//     if (err) return next(err);
-
-//     res.redirect('/solution');
-//   });
-// });
-
-// Advice
-// input: nothing
-// query: select all advice with all attribute and return
-// output render 'advice'
 app.get('/advice', (req, res, next) => {
   const context = {};
   connection.query('select * from Advice', (err,result) => {
