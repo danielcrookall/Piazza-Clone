@@ -76,10 +76,12 @@ const getFields = async (tableName) => {
       if (err) return reject(err);
 
       const fields = [];
+      const types = {};
       result.forEach(row => {
         fields.push(row.Field);
+        types[`${row.Field}`] = row.Type
       });
-      return resolve(fields);
+      return resolve({ fields, types });
     });
   });
 }
@@ -98,9 +100,11 @@ app.get('/select', async (req, res, next) => {
   };
   for (let i = 0; i < context.tableNames.length; i++) {
     const tableName = context.tableNames[i];
-    const fields = await getFields(tableName);
-    context[`${tableName}Columns`] = fields;
+    const result = await getFields(tableName);
+    context[`${tableName}Columns`] = result.fields;
+    context[`${tableName}Types`] = result.types;
   }
+  // console.log(context);
   res.render('select', setUserToData(context));
 });
 app.post('/select', async (req, res, next) => {
@@ -116,17 +120,29 @@ app.post('/select', async (req, res, next) => {
   };
   for (let i = 0; i < context.tableNames.length; i++) {
     const tableName = context.tableNames[i];
-    const fields = await getFields(tableName);
-    context[`${tableName}Columns`] = fields;
+    const result = await getFields(tableName);
+    context[`${tableName}Columns`] = result.fields;
+    context[`${tableName}Types`] = result.types;
   }
 
   const tableName = req.body.tableName;
   const fields = context[`${tableName}Columns`];
+  const types = context[`${tableName}Types`];
 
   const projectColumns = [];
+  const conditions = [];
   fields.forEach(col => {
     if (req.body[`${col}-column`]) {
       projectColumns.push(col);
+    }
+    if (req.body[`${col}_opd`] !== '') {
+      const type = types[`${col}`];
+      const val = (req.body[`${col}_op`] === 'like')? `%${req.body[`${col}_opd`]}%`:req.body[`${col}_opd`];
+      if (type.includes('varchar')) {
+        conditions.push(`${col} ${req.body[`${col}_op`]} '${val}'`);
+      } else {
+        conditions.push(`${col} ${req.body[`${col}_op`]} ${val}`);
+      }
     }
   });
   let projectString = '';
@@ -136,7 +152,12 @@ app.post('/select', async (req, res, next) => {
     projectString = projectColumns.join(', ');
   }
 
-  const conditionString = (req.body.condition !== '') ? ` where ${req.body.condition}`: '';
+  let conditionString = '';
+  if (conditions.length > 0) {
+    conditionString = ' where '
+    conditionString += conditions.join(' and ');
+  }
+  // console.log(conditionString);
   connection.query(`select ${projectString} from ${req.body.tableName}${conditionString}`, (err, result) => {
     if (err) return next(err);
 
