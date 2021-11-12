@@ -348,11 +348,30 @@ app.post('/solution', (req, res, next) => {
 });
 // update solution
 app.get('/solution/update', (req, res, next) => {
-  res.render('solution/updateSolution', setUserToData({}));
+  const context = {};
+  connection.query('select * from Solution', (err, result) => {
+    if (err) return next(err);
+
+    context.solutions = result;
+    
+    connection.query('select * from Problem', (err2, result2) => {
+      if (err2) return next(err2);
+
+      context.problems = result2;
+
+      res.render('solution/updateSolution', setUserToData(context));
+      });
+    });
 });
+
 // passed req.body: 
 app.post('/solution/update', (req, res, next) => {
-  res.redirect('/solution');
+  const solutionID = `solutionID${req.body['solutionid-op']}${req.body['solutionid-opd']}`;
+  const queryString = `UPDATE Solution SET body = '${req.body.body}', problemID = '${req.body.problem}', confidence = '${req.body.confidence}' WHERE ${solutionID}`
+  connection.query(queryString, (err, result) => {
+    if (err) return next(err);
+    res.redirect('/solution');
+  });
 });
 
 
@@ -369,18 +388,14 @@ app.get('/solution/delete', (req, res, next) => {
 
 // query: delete a solution
 app.post('/solution/delete', (req, res, next) => {
-  const condition = req.body.condition;
-  connection.query(`delete from Solution where ${condition};`, (err,result) => {
+  const solutionID = `solutionID${req.body['solutionid-op']}${req.body['solutionid-opd']}`;
+  connection.query(`delete from Solution where ${solutionID};`, (err, result) => {
     if (err) return next(err);
 
     res.redirect('/solution');
   });
 });
 
-// Advice
-// input: nothing
-// query: select all advice with all attribute and return
-// output render 'advice'
 app.get('/advice', (req, res, next) => {
   const context = {};
   connection.query('select * from Advice', (err,result) => {
