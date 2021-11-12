@@ -39,8 +39,11 @@ app.post('/signup', (req, res, next) => {
     }
     connection.query(`insert into User(username, isAdmin) values('${username}', ${isAdmin})`, (err, result) => {
       if (err) return next(err);
-      setUser(username, result[0].userID);
-      res.redirect('/');
+      connection.query(`select userID, username from User where username='${username}'`, (err2, result2) => {
+        if (err2) return next(err2);
+        setUser(username, result2[0].userID);
+        res.redirect('/');
+      });
     })
   } catch (e) {
     return next(e);
