@@ -345,13 +345,23 @@ app.get('/solution/delete', (req, res, next) => {
 
 // query: delete a solution
 app.post('/solution/delete', (req, res, next) => {
-  const condition = req.body.condition;
-  connection.query(`delete from Solution where ${condition};`, (err,result) => {
+  const solutionID = `solutionID${req.body['solutionid-op']}${req.body['solutionid-opd']}`;
+  connection.query(`delete from Solution where ${solutionID};`, (err, result) => {
     if (err) return next(err);
 
     res.redirect('/solution');
   });
 });
+
+
+
+//   const condition = req.body.condition;
+//   connection.query(`delete from Solution where ${condition};`, (err,result) => {
+//     if (err) return next(err);
+
+//     res.redirect('/solution');
+//   });
+// });
 
 // Advice
 // input: nothing
