@@ -186,7 +186,10 @@ app.post('/select', async (req, res, next) => {
   });
 });
 
-// Problem
+/**
+ * Problem
+ */
+
 // input: nothing
 // query: select all problem with all attribute and return
 // output render 'problem', keys: problems, courses
@@ -313,7 +316,10 @@ app.post('/problem/select', (req, res, next) => {
   });
 });
 
-// Solution
+/**
+ * Solution
+ */
+
 // input: nothing
 // query: select all solution with all attribute and return
 // output render 'solution'
@@ -370,7 +376,7 @@ app.post('/solution/update', (req, res, next) => {
   const queryString = `UPDATE Solution SET body = '${req.body.body}', problemID = '${req.body.problem}', confidence = '${req.body.confidence}' WHERE ${solutionID}`
   connection.query(queryString, (err, result) => {
     if (err) return next(err);
-    res.redirect('/solution');
+    res.redirect('/solution/update');
   });
 });
 
@@ -395,6 +401,17 @@ app.post('/solution/delete', (req, res, next) => {
     res.redirect('/solution');
   });
 });
+
+// See the average confidence rate of all solution for each user (showing with each username)
+app.get('/solution/avgConfidence', (req, res, next) => {
+  const context = {};
+  return res.render('solution/averageConfidence', setUserToData(context));
+});
+
+
+/**
+ * Advice
+ */
 
 app.get('/advice', (req, res, next) => {
   const context = {};
@@ -474,6 +491,12 @@ app.post('/advice/select', (req, res, next) => {
     res.render('advice/advice', setUserToData(context));
     });
   });
+});
+
+// Join the Advice and User table to find all advice from a specific username
+app.post('/advice/whose', (req, res, next) => {
+  const context = {};
+  return res.render('advice/advice', setUserToData(context));
 });
 
 function getRandomInt(min, max) {

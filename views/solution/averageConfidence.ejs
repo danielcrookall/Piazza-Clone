@@ -1,0 +1,22 @@
+<%- include('../partials/header.ejs'); %>
+
+<main>
+  <div class="container">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">username</th>
+          <th scope="col">Average Confidence Rate (%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < avgConfidences.length; i++) {%>
+          <tr>
+            <td><%= solutions[i].username %></td>
+            <td><%= solutions[i].avgConfidence %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</main>
