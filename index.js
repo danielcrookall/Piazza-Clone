@@ -39,8 +39,11 @@ app.post('/signup', (req, res, next) => {
     }
     connection.query(`insert into User(username, isAdmin) values('${username}', ${isAdmin})`, (err, result) => {
       if (err) return next(err);
-      setUser(username, result[0].userID);
-      res.redirect('/');
+      connection.query(`select userID, username from User where username='${username}'`, (err2, result2) => {
+        if (err2) return next(err2);
+        setUser(username, result2[0].userID);
+        res.redirect('/');
+      });
     })
   } catch (e) {
     return next(e);
@@ -76,10 +79,12 @@ const getFields = async (tableName) => {
       if (err) return reject(err);
 
       const fields = [];
+      const types = {};
       result.forEach(row => {
         fields.push(row.Field);
+        types[`${row.Field}`] = row.Type
       });
-      return resolve(fields);
+      return resolve({ fields, types });
     });
   });
 }
@@ -98,9 +103,11 @@ app.get('/select', async (req, res, next) => {
   };
   for (let i = 0; i < context.tableNames.length; i++) {
     const tableName = context.tableNames[i];
-    const fields = await getFields(tableName);
-    context[`${tableName}Columns`] = fields;
+    const result = await getFields(tableName);
+    context[`${tableName}Columns`] = result.fields;
+    context[`${tableName}Types`] = result.types;
   }
+  // console.log(context);
   res.render('select', setUserToData(context));
 });
 app.post('/select', async (req, res, next) => {
@@ -116,17 +123,29 @@ app.post('/select', async (req, res, next) => {
   };
   for (let i = 0; i < context.tableNames.length; i++) {
     const tableName = context.tableNames[i];
-    const fields = await getFields(tableName);
-    context[`${tableName}Columns`] = fields;
+    const result = await getFields(tableName);
+    context[`${tableName}Columns`] = result.fields;
+    context[`${tableName}Types`] = result.types;
   }
 
   const tableName = req.body.tableName;
   const fields = context[`${tableName}Columns`];
+  const types = context[`${tableName}Types`];
 
   const projectColumns = [];
+  const conditions = [];
   fields.forEach(col => {
     if (req.body[`${col}-column`]) {
       projectColumns.push(col);
+    }
+    if (req.body[`${col}_opd`] !== '') {
+      const type = types[`${col}`];
+      const val = (req.body[`${col}_op`] === 'like')? `%${req.body[`${col}_opd`]}%`:req.body[`${col}_opd`];
+      if (type.includes('varchar')) {
+        conditions.push(`${col} ${req.body[`${col}_op`]} '${val}'`);
+      } else {
+        conditions.push(`${col} ${req.body[`${col}_op`]} ${val}`);
+      }
     }
   });
   let projectString = '';
@@ -136,7 +155,12 @@ app.post('/select', async (req, res, next) => {
     projectString = projectColumns.join(', ');
   }
 
-  const conditionString = (req.body.condition !== '') ? ` where ${req.body.condition}`: '';
+  let conditionString = '';
+  if (conditions.length > 0) {
+    conditionString = ' where '
+    conditionString += conditions.join(' and ');
+  }
+  // console.log(conditionString);
   connection.query(`select ${projectString} from ${req.body.tableName}${conditionString}`, (err, result) => {
     if (err) return next(err);
 
@@ -162,7 +186,10 @@ app.post('/select', async (req, res, next) => {
   });
 });
 
-// Problem
+/**
+ * Problem
+ */
+
 // input: nothing
 // query: select all problem with all attribute and return
 // output render 'problem', keys: problems, courses
@@ -289,7 +316,10 @@ app.post('/problem/select', (req, res, next) => {
   });
 });
 
-// Solution
+/**
+ * Solution
+ */
+
 // input: nothing
 // query: select all solution with all attribute and return
 // output render 'solution'
@@ -346,7 +376,7 @@ app.post('/solution/update', (req, res, next) => {
   const queryString = `UPDATE Solution SET body = '${req.body.body}', problemID = '${req.body.problem}', confidence = '${req.body.confidence}' WHERE ${solutionID}`
   connection.query(queryString, (err, result) => {
     if (err) return next(err);
-    res.redirect('/solution');
+    res.redirect('/solution/update');
   });
 });
 
@@ -371,6 +401,17 @@ app.post('/solution/delete', (req, res, next) => {
     res.redirect('/solution');
   });
 });
+
+// See the average confidence rate of all solution for each user (showing with each username)
+app.get('/solution/avgConfidence', (req, res, next) => {
+  const context = {};
+  return res.render('solution/averageConfidence', setUserToData(context));
+});
+
+
+/**
+ * Advice
+ */
 
 app.get('/advice', (req, res, next) => {
   const context = {};
@@ -450,6 +491,12 @@ app.post('/advice/select', (req, res, next) => {
     res.render('advice/advice', setUserToData(context));
     });
   });
+});
+
+// Join the Advice and User table to find all advice from a specific username
+app.post('/advice/whose', (req, res, next) => {
+  const context = {};
+  return res.render('advice/advice', setUserToData(context));
 });
 
 function getRandomInt(min, max) {

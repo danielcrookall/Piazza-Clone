@@ -18,8 +18,8 @@
         </div>
         <div class="input-group">
           <span class="input-group-text" id="basic-addon1">Condition</span>
-          <input type="text" name="condition" class="form-control"
-            placeholder="Example: columnA=1 and columnB<>3">
+        </div>
+        <div id="tableConditions">
         </div>
         <input type="submit" class="btn btn-info" value="Submit">
       </form>
@@ -78,7 +78,7 @@
     cols = '<%- VoteNumPositionColumns %>';
     columns.VoteNumPosition = cols.split(',');
     cols = '<%- AdviceColumns %>';
-    columns.AdviceColumns = cols.split(',');
+    columns.Advice = cols.split(',');
     cols = '<%- VoteRecordColumns %>';
     columns.VoteRecord = cols.split(',');
     
@@ -94,13 +94,44 @@
       input.type = 'checkbox';
       input.name = `${fields[i]}-column`;
       input.value = '1';
-      const label = document.createElement('lable');
+      const label = document.createElement('label');
       label.className = 'form-check-label';
       label.for = `${fields[i]}-column`;
       label.innerText = `${fields[i]}`;
       div.appendChild(input);
       div.appendChild(label);
       tableColumns.appendChild(div);
+    }
+    const tableConditions = document.getElementById('tableConditions');
+    while (tableConditions.hasChildNodes()) {  
+      tableConditions.removeChild(tableConditions.firstChild);
+    }
+    const options = ['=', '<>', '>', '<', '>=', '<=', 'like'];
+    for (let i = 0; i < fields.length; i++) {
+      const div = document.createElement('div');
+      div.className = 'input-group mb-3';
+      const span = document.createElement('span');
+      span.className= 'input-group-text';
+      span.innerText = `${fields[i]}`;
+      const select = document.createElement('select');
+      select.className = 'form-select';
+      select.name = `${fields[i]}_op`;
+      for (let j = 0; j < options.length; j++) {
+        const optionVal = options[j];
+        const option = document.createElement('option');
+        option.value = optionVal;
+        option.innerText = (optionVal !== 'like')? optionVal : 'includes';
+        select.appendChild(option);
+      }
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.name = `${fields[i]}_opd`;
+      input.className = 'form-control';
+      input.placeholder = 'value';
+      div.appendChild(span);
+      div.appendChild(select);
+      div.appendChild(input);
+      tableConditions.appendChild(div);
     }
   }
   changeColumns();
