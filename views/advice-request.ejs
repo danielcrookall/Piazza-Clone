@@ -3,6 +3,29 @@
 <main>
   <div class="container">
     <h3>Advice Request</h3>
+    <div style="margin: 20px 5px 5px 5px;">
+      <form action="/advice-request/adviceAllUser" method="post">
+        <input type="submit" class="btn btn-outline-primary" value="Find user who gave advices to all posted solution">
+      </form>
+      <% if (adviceAllUsers) { %>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">userID</th>
+              <th scope="col">username</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(let i = 0; i < adviceAllUsers.length; i++) {%>
+              <tr>
+                <td><%= adviceAllUsers[i].userID %></td>
+                <td><%= adviceAllUsers[i].username %></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      <% } %> 
+    </div>
     <table class="table table-striped">
       <thead>
         <tr>

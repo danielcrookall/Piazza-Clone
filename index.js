@@ -575,6 +575,7 @@ function getRandomInt(min, max) {
 // output render 'advice-request'
 app.get('/advice-request', (req, res, next) => {
   const context = {};
+  context.adviceAllUsers = null;
   connection.query('select * from AdviceRequest', (err, result) => {
     if (err) return next(err);
 
@@ -599,6 +600,41 @@ app.post('/advice-request', (req, res, next) => {
     res.redirect('/advice-request');
   });
 });
+app.post('/advice-request/adviceAllUser', (req, res, next) => {
+  const context = {};
+  const queryString = `
+  select u.userID, u.username
+  from User u
+  where not exists (
+    select solutionID
+    from Solution
+    where solutionID NOT IN (
+      select solutionID
+      from Advice a
+      where a.userID = u.userID
+    )
+  )
+  `;
+  connection.query('select * from AdviceRequest', (err, result) => {
+    if (err) return next(err);
+
+    context.adviceRequests = result;
+    connection.query('select * from User', (err2, result2) => {
+      if (err2) return next(err2);
+
+      context.users = result2;
+      
+      connection.query(queryString, (err3, result3) => {
+        if (err3) return next(err3);
+
+        context.adviceAllUsers = result3;
+        res.render('advice-request', setUserToData(context));
+      })
+    });
+  });
+});
+
+
 
 // Course
 app.get('/course', (req, res, next) => {
