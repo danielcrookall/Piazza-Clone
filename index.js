@@ -531,6 +531,37 @@ app.post('/advice/whose', (req, res, next) => {
   return res.render('advice/advice', setUserToData(context));
 });
 
+// Find the comment of the advice with maximum voting number for each solutions
+app.get('/advice/maxVoteAdvice', async (req, res, next) => {
+  const context = {};
+  const queryString = `
+  select s.solutionID, s.body, a.comment, Temp.maxVoteNum
+  from Solution s, Advice a, (
+    select solutionID, MAX(voteNum) as maxVoteNum
+    from Advice
+    group by solutionID) as Temp
+  where s.solutionID = a.solutionID and a.solutionID = Temp.solutionID and
+        a.voteNum = Temp.maxVoteNum
+  `;
+  
+  try {
+    const result = await getMaxVoteAdvice(queryString);
+    context.maxVoteAdvice = result;
+    return res.render('advice/maxVoteAdvice', setUserToData(context));
+  } catch (e) {
+    return next(e);
+  }
+});
+const getMaxVoteAdvice = async (queryString) => {
+  return new Promise((resolve, reject) => {
+    connection.query(queryString, (err, result) => {
+      if (err) return reject(err);
+
+      return resolve(result);
+    });
+  });
+}
+
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
