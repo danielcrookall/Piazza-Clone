@@ -373,8 +373,30 @@ app.get('/solution/update', (req, res, next) => {
 // passed req.body: 
 app.post('/solution/update', (req, res, next) => {
   const solutionID = `solutionID${req.body['solutionid-op']}${req.body['solutionid-opd']}`;
-  const queryString = `UPDATE Solution SET body = '${req.body.body}', problemID = '${req.body.problem}', confidence = '${req.body.confidence}' WHERE ${solutionID}`
-  connection.query(queryString, (err, result) => {
+  var queryString = `UPDATE Solution SET `
+  var prev = false;
+  if (JSON.stringify(req.body).includes('body-column')){
+    queryString = queryString.concat(`body = '${req.body.body}' `)
+    prev = true;
+  }
+  if (JSON.stringify(req.body).includes('confidence-column')){
+    if (prev){
+      queryString = queryString.concat(', ')
+    }
+    queryString = queryString.concat(`confidence = '${req.body.confidence}' `)
+    prev = true;
+  }
+  if (JSON.stringify(req.body).includes('problem-column')){
+    if (prev){
+      queryString = queryString.concat(', ')
+    }
+    queryString = queryString.concat(`problemID = '${req.body.problem}' `)
+  }
+  queryString = queryString.concat(`WHERE ${solutionID}`)
+  const newString = queryString
+  console.log(newString)
+  // const newString = `UPDATE Solution SET body = '${req.body.body}', problemID = '${req.body.problem}', confidence = '${req.body.confidence}' WHERE ${solutionID}`
+  connection.query(newString, (err, result) => {
     if (err) return next(err);
     res.redirect('/solution/update');
   });
