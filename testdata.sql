@@ -18,6 +18,8 @@ VALUES
 ('Cryptography'),
 ('AI'),
 ('Machine Learning'),
+('Computer Systems'),
+('Linear Algebra'),
 ('Calculus');
 
 INSERT INTO Departmentfaculty(department, faculty)
@@ -26,7 +28,8 @@ VALUES
 ('MATH', 'Science'),
 ('ENGL', 'Arts'),
 ('PHYS', 'Science'),
-('COMM', 'Business'); 
+('COMM', 'Business'),
+('ASTR', 'Science'); 
 
 
 INSERT INTO Course(courseNum, department)
@@ -34,10 +37,12 @@ VALUES
 (304, 'CPSC'),
 (322, 'CPSC'),
 (213, 'CPSC'),
+(221, 'CPSC'),
 (200, 'MATH'),
 (221, 'MATH'),
 (112, 'ENGL'),
 (302, 'MATH'),
+(333, 'ASTR'),
 (101, 'PHYS');
 
 INSERT INTO Register(userID, courseNum, department)
@@ -57,7 +62,14 @@ VALUES
 (12, 'LCFS', 'When arc costs are equal, what search algorithm is LCFS equivalent to?', 5, 'AI', 322, 'CPSC', 3),
 (10, 'Die Rolling', 'You roll a fair die until the first 1 comes up. What is the probability that the number of tosses is odd?', 3, 'Probability', 302, 'MATH', 3),
 (3, 'There vs Their', 'Should I use there or their in the following sentence: "Is ____ going to be a party tomorrow', 2, 'Writing', 112, 'ENGL', 1),
-(5, 'Riemann Sum', 'Estimate the area between f(x) = x^3 - 2x^2 + 4 and the x-axis on [1,4] using the right end points of the subintervals for the height of the rectangles.', 1, 'Calculus', 200, 'MATH', 2.3);
+(5, 'Riemann Sum', 'Estimate the area between f(x) = x^3 - 2x^2 + 4 and the x-axis on [1,4] using the right end points of the subintervals for the height of the rectangles.', 1, 'Calculus', 200, 'MATH', 2.3),
+(1, 'Stack Smash Attacks', "Are stack smash attacks possible on architectures that deploy a stack that grows down instead of up?", 4, 'Computer Systems', 213, 'CPSC', 2.5),
+(4, 'Address Alignment', 'Is 0x000073bc aligned to store an 8-byte integer?', 3, 'Computer Systems', 213, 'CPSC', 1.5),
+(6, 'Bitwise Operations', 'Assuming that i is an integer variable that stores a non-negative value, how do you compute i % 16 with bitwise operations?', 2, 'Computer Systems', 213, 'CPSC', 2.5),
+(7, 'Area Calculation', 'Let S be an ellipse in R2 whose area is 5. Compute the area of T(S), where T(x)=Ax and A is the matrix [2 3;0 -3]', 5, 'Linear Algebra', 221, 'MATH', 2.5),
+(8, 'Binary Search Tree', 'Given a binary search tree, which traversal type would print the values in the nodes in sorted order?', 3, 'Algorithm Analysis', 221, 'CPSC', 1),
+(9, 'Fusion Reactions', 'Which particle is produced by fusion reactions in the Sun yet travels to Earth and beyond unimpeded?', 5, 'Astronomy', 333, 'ASTR', 2),
+(11, 'Discrete Random Variables', 'What does a geometric random variable calculate?', 4, 'Probability', 302, 'MATH', 2.5); 
 
 INSERT INTO Admin(userID, staffNum)
 VALUES
@@ -72,7 +84,14 @@ VALUES
 (2, 'You should use there. Their is a posessive pronoun. There is an adbverb and means in or at that place.', 4, 3, 5),
 (3, 'Add up the probabilities of the die coming up 1 for the first time on toss 1,3,5 ... Rewrite it as a series and solve. The answer is 2/3.', 5, 10, 3),
 (4, 'The time complexity of quick sort is O(n!). It is a terrible algorithm and you should never use it', 7, 2, 2),
-(5, 'If the arc costs are equal, lowest cost first search is equivalent to BFS. This makes sense, because when performing LCFS you just use a priority queue. If the costs of the arcs are no longer a factor, the priority queue acts just like a regular queue.', 3, 12, 1);
+(5, 'If the arc costs are equal, lowest cost first search is equivalent to BFS. This makes sense, because when performing LCFS you just use a priority queue. If the costs of the arcs are no longer a factor, the priority queue acts just like a regular queue.', 3, 12, 1),
+(6, "Yes, the attack is still possible, but only for code with an array underflow.", 3, 1, 90),
+(7, "In order for an address to be aligned by n bytes, it should be completely divisible by n (with no remainder). Since 0x000073bc ends in a 0xc it is not divisible by 8 and therefore not aligned.", 3,4,95),
+(8, "Dividing by any power of 2 is the same as right shifting by that many bits. The remainder of these divisions is the bit that gets cut off due to the right shift. So in order to preserve these bits you take i & 15", 3, 6, 99),
+(9, 'The area T(S) is the area of the original ellipse S * the absolute value of the determinant of A. Det(A) = 2 * -3 = -6. So the area of T(S) is |-6| * 5 = 30.', 2, 7, 75),
+(10, 'An in-order traveral.', 2, 8, 100),
+(11, 'Neutrino.', 4, 9, 50),
+(12, 'A geometric random variable is the number of trials needed to get the first success in repeated Bernoulli trials. Its mean is 1/p and its variance is (1-p)/p^2. Its PMF is (1-p)^(x-1)*p where x = 1,2,3 ...', 4, 11, 78);
 
 INSERT INTO AdviceRequest(requestID, body, requestType, userID)
 VALUES

@@ -330,6 +330,7 @@ app.get('/solution', (req, res, next) => {
 
     context.solutions = result;
     
+    
     connection.query('select * from Problem', (err2, result2) => {
       if (err2) return next(err2);
 
@@ -427,7 +428,15 @@ app.post('/solution/delete', (req, res, next) => {
 // See the average confidence rate of all solution for each user (showing with each username)
 app.get('/solution/avgConfidence', (req, res, next) => {
   const context = {};
+  
+  connection.query(`select username, AVG(confidence) as avgConfidence from solution s, user u 
+  where s.userID = u.userID group by u.username`, (err,result) => {
+    if (err) return next(err);
+    context.avgConfidences = result;   
+    console.log(result);   
+    
   return res.render('solution/averageConfidence', setUserToData(context));
+    });
 });
 
 
@@ -562,7 +571,7 @@ app.post('/advice-request', (req, res, next) => {
 // Course
 app.get('/course', (req, res, next) => {
   const context = {};
-  connection.query('select * from Register', (err1, result1) => {
+  connection.query('select * from Course', (err1, result1) => {
     if (err1) return next(err1);
 
     context.courses = result1;
