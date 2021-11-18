@@ -549,7 +549,7 @@ app.post('/advice-request', (req, res, next) => {
 // Course
 app.get('/course', (req, res, next) => {
   const context = {};
-  connection.query('select * from Register', (err1, result1) => {
+  connection.query('select * from Course', (err1, result1) => {
     if (err1) return next(err1);
 
     context.courses = result1;
