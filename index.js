@@ -427,7 +427,13 @@ app.post('/solution/delete', (req, res, next) => {
 // See the average confidence rate of all solution for each user (showing with each username)
 app.get('/solution/avgConfidence', (req, res, next) => {
   const context = {};
-  return res.render('solution/averageConfidence', setUserToData(context));
+  connection.query('SELECT User.username, AVG(Solution.confidence) AS avgConfidences FROM Solution LEFT JOIN User ON User.userID = Solution.userID GROUP BY Solution.userID', (err, result) => {
+    if (err) return next(err);
+    context.avgConfidences = result;
+    context.solutions = result;   
+    console.log(result);  
+    return res.render('solution/averageConfidence', setUserToData(context));
+  });
 });
 
 
