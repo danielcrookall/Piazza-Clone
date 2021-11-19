@@ -426,9 +426,7 @@ app.post('/solution/update', (req, res, next) => {
     queryString = queryString.concat(`problemID = '${req.body.problem}' `)
   }
   queryString = queryString.concat(`WHERE ${solutionID}`)
-  const newString = queryString
-  console.log(newString)
-  // const newString = `UPDATE Solution SET body = '${req.body.body}', problemID = '${req.body.problem}', confidence = '${req.body.confidence}' WHERE ${solutionID}`
+  const newString = queryString;
   connection.query(newString, (err, result) => {
     if (err) return next(err);
     res.redirect('/solution/update');
@@ -465,10 +463,10 @@ app.get('/solution/avgConfidence', (req, res, next) => {
   where s.userID = u.userID group by u.username`, (err,result) => {
     if (err) return next(err);
     context.avgConfidences = result;   
-    console.log(result);   
+    // console.log(result);   
     
-  return res.render('solution/averageConfidence', setUserToData(context));
-    });
+    return res.render('solution/averageConfidence', setUserToData(context));
+  });
 });
 
 
@@ -562,18 +560,17 @@ app.post('/advice/whose', (req, res, next) => {
   connection.query(`select * from Advice inner join User on Advice.userID = User.userID
   where User.username ='${req.body.username}'`, (err, result) => {
     if (err) return next(err);
-    console.log(result);
+    // console.log(result);
     context.advices = result;
 
     connection.query('select * from Solution', (err2, result2) =>  {
       if (err2) return next(err2);
-      console.log(result2);
+      // console.log(result2);
       context.solutions = result2;
     
-
-  return res.render('advice/advice', setUserToData(context));
+      return res.render('advice/advice', setUserToData(context));
+    });
   });
-});
 });
 
 // Find the comment of the advice with maximum voting number for each solutions
@@ -606,12 +603,160 @@ const getMaxVoteAdvice = async (queryString) => {
     });
   });
 }
-
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
 }
+
+// Voting
+/**
+ * Status
+ * 'normal'
+ * 'up'
+ * 'down'
+ */
+const createVoteRecord = (sid, aid, uid) => {
+  const queryString = `
+  insert into VoteRecord(status,solutionID,adviceID,userID) values('normal',${sid},${aid},${uid});
+  `;
+  return new Promise((resolve, reject) => {
+    connection.query(queryString, (err, result) => {
+      if (err) return reject(err);
+
+      return resolve(result);
+    });
+  })
+}
+const getOrCreateVR = (sid, aid, uid) => {
+  const queryString = `
+  select recordID, status from VoteRecord
+  where solutionID=${sid} and adviceID=${aid} and userID=${uid}
+  `
+  return new Promise((resolve, reject) => {
+    connection.query(queryString, async (err, result) => {
+      if (err) return reject(err);
+
+      if (result.length === 0) {
+        try {
+          const created = await createVoteRecord(sid, aid, uid);
+          console.log(created);
+          connection.query(queryString, (err2, result2) => {
+            if (err2) return reject(err2);
+
+            return resolve(result2);
+          });
+        } catch (err) {
+          return reject(err);
+        }
+      } else {
+        return resolve(result);
+      }
+    });
+  })
+}
+const updateVoteNum = (voteNum, sid, aid) => {
+  return new Promise((resolve, reject) => {
+    connection.query(`update Advice set voteNum=${voteNum} where solutionID=${sid} and adviceID=${aid}`, (err, result) => {
+      if (err) return reject(err);
+
+      return resolve(result);
+    });
+  });
+}
+const updateVoteRecord = (sid, aid, uid, statusStr) => {
+  return new Promise((resolve, reject) => {
+    connection.query(`update VoteRecord set status='${statusStr}' where solutionID=${sid} and adviceID=${aid} and userID=${uid}`, (err, result) => {
+      if (err) return reject(err);
+
+      return resolve(result);
+    });
+  }); 
+}
+app.post('/advice/upvote/', async (req, res, next) => {
+  const context = {};
+  // console.log(req.body);
+  const sid = req.body.solutionID;
+  const aid = req.body.adviceID;
+
+  let voteRecord;
+  try {
+    voteRecord = await getOrCreateVR(sid, aid, userId);
+  } catch (err) {
+    return next(err);
+  }
+
+  const voteNum = Number(req.body.voteNum);
+  // console.log('record: ' + JSON.stringify(voteRecord));
+  if (voteRecord.length !== 1) {
+    return next(new Error('Invalid vote record'));
+  }
+  try {
+    if (voteRecord[0].status === 'normal') {
+      await updateVoteNum(voteNum + 1, sid, aid);
+      await updateVoteRecord(sid, aid, userId, 'up');
+    } else if (voteRecord[0].status === 'down') {
+      await updateVoteNum(voteNum + 1, sid, aid);
+      await updateVoteRecord(sid, aid, userId, 'normal');
+    }
+  } catch (err) {
+    return next(err);
+  }
+
+  connection.query('select * from Advice', (err,result) => {
+    if (err) return next(err);
+
+    context.advices = result;
+    connection.query('select * from Solution', (err2, result2) =>  {
+    if (err2) return next(err2);
+
+    context.solutions = result2;
+    res.render('advice/advice', setUserToData(context));
+    });
+  });
+});
+app.post('/advice/downvote/', async (req, res, next) => {
+  const context = {};
+  // console.log(req.body);
+  const sid = req.body.solutionID;
+  const aid = req.body.adviceID;
+
+  let voteRecord;
+  try {
+    voteRecord = await getOrCreateVR(sid, aid, userId);
+  } catch (err) {
+    return next(err);
+  }
+
+  const voteNum = Number(req.body.voteNum);
+  // console.log('record: ' + JSON.stringify(voteRecord));
+  if (voteRecord.length !== 1) {
+    return next(new Error('Invalid vote record'));
+  }
+  try {
+    if (voteRecord[0].status === 'normal') {
+      await updateVoteNum(voteNum - 1, sid, aid);
+      await updateVoteRecord(sid, aid, userId, 'down');
+    } else if (voteRecord[0].status === 'up') {
+      await updateVoteNum(voteNum - 1, sid, aid);
+      await updateVoteRecord(sid, aid, userId, 'normal');
+    }
+  } catch (err) {
+    return next(err);
+  }
+
+  connection.query('select * from Advice', (err,result) => {
+    if (err) return next(err);
+
+    context.advices = result;
+    connection.query('select * from Solution', (err2, result2) =>  {
+    if (err2) return next(err2);
+
+    context.solutions = result2;
+    res.render('advice/advice', setUserToData(context));
+    });
+  });
+});
 
 
 // Advice Request

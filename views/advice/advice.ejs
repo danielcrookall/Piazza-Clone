@@ -49,7 +49,10 @@
           <th scope="col">adviceID</th>
           <th scope="col">comment</th>
           <th scope="col">userID</th>
+          <th scope="col">username</th>
           <th scope="col">Vote Number (voteNum)</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
@@ -71,11 +74,32 @@
             <% } else { %>
               <td></td>
             <% } %>
+            <% if (advices[i].username) { %>
+              <td><%= advices[i].username %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
             <% if (advices[i].voteNum >= 0 || advices[i].voteNum < 0) { %>
               <td><%= advices[i].voteNum %></td>
             <% } else { %>
               <td></td>
             <% } %>
+            <form action="/advice/upvote" method="post">
+              <td>
+                <input type="hidden" name="solutionID" value="<%= advices[i].solutionID %>">
+                <input type="hidden" name="adviceID" value="<%= advices[i].adviceID %>">
+                <input type="hidden" name="voteNum" value="<%= advices[i].voteNum %>">
+                <input type="submit" class="btn btn-success" value="Up">
+              </td>
+            </form>
+            <form action="/advice/downvote" method="post">
+              <td>
+                <input type="hidden" name="solutionID" value="<%= advices[i].solutionID %>">
+                <input type="hidden" name="adviceID" value="<%= advices[i].adviceID %>">
+                <input type="hidden" name="voteNum" value="<%= advices[i].voteNum %>">
+                <input type="submit" class="btn btn-danger" value="Down">
+              </td>
+            </form>
           </tr>
         <% } %>
       </tbody>
@@ -100,5 +124,3 @@
     </div>
   </div>
 </main>
-
-<%- include('../partials/footer.ejs'); %>
