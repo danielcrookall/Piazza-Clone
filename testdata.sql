@@ -111,11 +111,27 @@ VALUES
 
 INSERT INTO Advice(solutionID, adviceID, comment, userID, voteNum)
 VALUES
-(1,1,'I got the same answer but it would be helpful if you showed a bit more work!', 5, 0),
-(2, 3, 'Maybe give some more examples to make it more clear', 4, 0),
-(3, 5, 'This is wrong. The probability of rolling a 6 is 1/6', 7, 0),
+(1, 1,'I got the same answer but it would be helpful if you showed a bit more work!', 5, 0),
 (4, 2, 'Wrong. Quicksort runs in O(n^2) time in the worst case. On average it actually takes O(nlogn) making it quite an efficient algorithm', 3, 0),
-(5, 9, 'I disagree. DFS uses a queue not BFS. So the answer is DFS.', 4, 0);
+(2, 3, 'Maybe give some more examples to make it more clear', 4, 0),
+(11,4, 'What is a neutrino?', 1, 0),
+(3, 5, 'This is wrong. The probability of rolling a 6 is 1/6', 7, 0),
+(8, 6, 'Do not forget that multiplying by powers of 2 is the equivalent of right shifting. Also remember the difference between signed and unsigned shifts!',2,0),
+(6, 7, 'Stack smash attacks are much harder nowadays due to security measures such as nonexecutable stacks, randomization and stack canaries',3,0),
+(2, 8, 'When do you use they\'re then?', 4, 0),
+(5, 9, 'I disagree. DFS uses a queue not BFS. So the answer is DFS.', 4, 0),
+(9, 10, 'How do you calculate the determinant of a matrix?', 8, 0);
+
+
+
+
+
+
+
+
+
+
+
 
 INSERT INTO VoteRecord(recordID, status, solutionID, adviceID, userID)
 VALUES

@@ -527,7 +527,21 @@ app.post('/advice/select', (req, res, next) => {
 // Join the Advice and User table to find all advice from a specific username
 app.post('/advice/whose', (req, res, next) => {
   const context = {};
+  connection.query(`select * from Advice inner join User on Advice.userID = User.userID
+  where User.username ='${req.body.username}'`, (err, result) => {
+    if (err) return next(err);
+    console.log(result);
+    context.advices = result;
+
+    connection.query('select * from Solution', (err2, result2) =>  {
+      if (err2) return next(err2);
+      console.log(result2);
+      context.solutions = result2;
+    
+
   return res.render('advice/advice', setUserToData(context));
+  });
+});
 });
 
 function getRandomInt(min, max) {
