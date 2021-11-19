@@ -429,7 +429,7 @@ app.post('/solution/delete', (req, res, next) => {
 app.get('/solution/avgConfidence', (req, res, next) => {
   const context = {};
   
-  connection.query(`select username, AVG(confidence) as avgConfidence from solution s, user u 
+  connection.query(`select username, CAST(AVG(confidence) as decimal(10)) as avgConfidence from solution s, user u 
   where s.userID = u.userID group by u.username`, (err,result) => {
     if (err) return next(err);
     context.avgConfidences = result;   
