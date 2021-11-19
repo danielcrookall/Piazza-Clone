@@ -431,7 +431,6 @@ app.get('/solution/avgConfidence', (req, res, next) => {
     if (err) return next(err);
     context.avgConfidences = result;
     context.solutions = result;   
-    console.log(result);  
     return res.render('solution/averageConfidence', setUserToData(context));
   });
 });

@@ -68,11 +68,16 @@ VALUES
 
 INSERT INTO Solution(solutionID, body, userID, problemID, confidence)
 VALUES
-(1, 'The width of each subinterval is 0.5. So the area is approximately 0.5 * f(1.5) + 0.5*f(2) + 0.5 * f(2.5) + 0.5 *f(3) + 0.5 * f(3.5) + 0.5 * f(4) = 683/16', 2, 5,5),
-(2, 'You should use there. Their is a posessive pronoun. There is an adbverb and means in or at that place.', 4, 3, 5),
-(3, 'Add up the probabilities of the die coming up 1 for the first time on toss 1,3,5 ... Rewrite it as a series and solve. The answer is 2/3.', 5, 10, 3),
-(4, 'The time complexity of quick sort is O(n!). It is a terrible algorithm and you should never use it', 7, 2, 2),
-(5, 'If the arc costs are equal, lowest cost first search is equivalent to BFS. This makes sense, because when performing LCFS you just use a priority queue. If the costs of the arcs are no longer a factor, the priority queue acts just like a regular queue.', 3, 12, 1);
+(1, 'The width of each subinterval is 0.5. So the area is approximately 0.5 * f(1.5) + 0.5*f(2) + 0.5 * f(2.5) + 0.5 *f(3) + 0.5 * f(3.5) + 0.5 * f(4) = 683/16', 2, 5, 80),
+(2, 'You should use there. Their is a posessive pronoun. There is an adbverb and means in or at that place.', 4, 3, 40),
+(3, 'Add up the probabilities of the die coming up 1 for the first time on toss 1,3,5 ... Rewrite it as a series and solve. The answer is 2/3.', 5, 10, 30),
+(4, 'The time complexity of quick sort is O(n!). It is a terrible algorithm and you should never use it', 7, 2, 20),
+(5, 'If the arc costs are equal, lowest cost first search is equivalent to BFS. This makes sense, because when performing LCFS you just use a priority queue. If the costs of the arcs are no longer a factor, the priority queue acts just like a regular queue.', 3, 12, 50),
+(6, 'I think you should use there for this particular question, but I am not too sure!', 2, 3, 20),
+(7, 'I am like a 100% sure quicksort takes O(n log n) time, even a PHD in linguistics on Reddit says so!', 2, 2, 100),
+(8, 'I think majority of sorting algorithm take O(n log n) so Im gonna guess that. Theres probably a 50/50 chance Im right', 4, 2, 50),
+(9, 'I think it should just be a 1/6 chance no matter what, but I am not too sure', 7, 10, 10),
+(10, 'DFS. I mean in that case we would just go to the first arc that is in order. And then from there we repeat the same process', 5, 12, 80);
 
 INSERT INTO AdviceRequest(requestID, body, requestType, userID)
 VALUES
