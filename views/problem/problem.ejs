@@ -32,6 +32,38 @@
         <input type="submit" class="btn btn-info" value="Select"/>
       </form>
     </div>
+    <div style="margin: 10px;">
+      <form action="/problem/avgDiffDept" method="post" style="display: flex;">
+        <div class="input-group" style="max-width: 80%;">
+          <span class="input-group-text">Average Difficulty for each Departments</span>
+          <select name="diffOpr" class="form-select">
+            <option value="more">greater than</option>
+            <option value="less">less than</option>
+          </select>
+          <input type="text" class="form-control" name="diffOpd" 
+            placeholder="average difficulty" required>
+        </div>
+        <input type="submit" class="btn btn-outline-secondary" value="show">
+      </form>
+      <% if (averageDiffDept) { %>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Department</th>
+              <th scope="col">Average Difficulty</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(let i = 0; i < averageDiffDept.length; i++) {%>
+              <tr>
+                <td><%= averageDiffDept[i].department %></td>
+                <td><%= averageDiffDept[i].avgDiff %></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      <% } %> 
+    </div>
     <table class="table table-striped">
       <thead>
         <tr>

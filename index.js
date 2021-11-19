@@ -195,6 +195,7 @@ app.post('/select', async (req, res, next) => {
 // output render 'problem', keys: problems, courses
 app.get('/problem', (req, res, next) => {
   const context = {};
+  context.averageDiffDept = null;
   connection.query('select * from Problem', (err, result) => {
     if (err) return next(err);
 
@@ -311,6 +312,37 @@ app.post('/problem/select', (req, res, next) => {
 
         context.types = result3;
         res.render('problem/problem', setUserToData(context));
+      });
+    });
+  });
+});
+app.post('/problem/avgDiffDept', (req, res, next) => {
+  const context = {};
+  const operator = (req.body.diffOpr === 'more')? '>' : '<';
+  const queryString = `
+  select department, AVG(difficulty) as avgDiff
+  from Problem
+  group by department
+  having AVG(difficulty) ${operator} ${req.body.diffOpd}
+  `;
+  connection.query(queryString, (err, result) => {
+    if (err) return next(err);
+
+    context.averageDiffDept = result;
+    connection.query('select * from Problem', (err1, result1) => {
+      if (err1) return next(err1);
+  
+      context.problems = result1;
+      connection.query('select * from Course', (err2, result2) => {
+        if (err2) return next(err2);
+  
+        context.courses = result2;
+        connection.query('select * from Type', (err3, result3) => {
+          if (err3) return next(err3);
+  
+          context.types = result3;
+          res.render('problem/problem', setUserToData(context));
+        });
       });
     });
   });
@@ -544,6 +576,37 @@ app.post('/advice/whose', (req, res, next) => {
 });
 });
 
+// Find the comment of the advice with maximum voting number for each solutions
+app.get('/advice/maxVoteAdvice', async (req, res, next) => {
+  const context = {};
+  const queryString = `
+  select s.solutionID, s.body, a.comment, Temp.maxVoteNum
+  from Solution s, Advice a, (
+    select solutionID, MAX(voteNum) as maxVoteNum
+    from Advice
+    group by solutionID) as Temp
+  where s.solutionID = a.solutionID and a.solutionID = Temp.solutionID and
+        a.voteNum = Temp.maxVoteNum
+  `;
+  
+  try {
+    const result = await getMaxVoteAdvice(queryString);
+    context.maxVoteAdvice = result;
+    return res.render('advice/maxVoteAdvice', setUserToData(context));
+  } catch (e) {
+    return next(e);
+  }
+});
+const getMaxVoteAdvice = async (queryString) => {
+  return new Promise((resolve, reject) => {
+    connection.query(queryString, (err, result) => {
+      if (err) return reject(err);
+
+      return resolve(result);
+    });
+  });
+}
+
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -557,6 +620,7 @@ function getRandomInt(min, max) {
 // output render 'advice-request'
 app.get('/advice-request', (req, res, next) => {
   const context = {};
+  context.adviceAllUsers = null;
   connection.query('select * from AdviceRequest', (err, result) => {
     if (err) return next(err);
 
@@ -581,6 +645,41 @@ app.post('/advice-request', (req, res, next) => {
     res.redirect('/advice-request');
   });
 });
+app.post('/advice-request/adviceAllUser', (req, res, next) => {
+  const context = {};
+  const queryString = `
+  select u.userID, u.username
+  from User u
+  where not exists (
+    select solutionID
+    from Solution
+    where solutionID NOT IN (
+      select solutionID
+      from Advice a
+      where a.userID = u.userID
+    )
+  )
+  `;
+  connection.query('select * from AdviceRequest', (err, result) => {
+    if (err) return next(err);
+
+    context.adviceRequests = result;
+    connection.query('select * from User', (err2, result2) => {
+      if (err2) return next(err2);
+
+      context.users = result2;
+      
+      connection.query(queryString, (err3, result3) => {
+        if (err3) return next(err3);
+
+        context.adviceAllUsers = result3;
+        res.render('advice-request', setUserToData(context));
+      })
+    });
+  });
+});
+
+
 
 // Course
 app.get('/course', (req, res, next) => {
