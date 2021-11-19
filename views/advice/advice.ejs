@@ -41,14 +41,12 @@
           <th scope="col">adviceID</th>
           <th scope="col">comment</th>
           <th scope="col">userID</th>
-          <th scope="col">username</th>
           <th scope="col">Vote Number (voteNum)</th>
         </tr>
       </thead>
       <tbody>
         <% for(let i = 0; i < advices.length; i++) {%>
           <tr>
-        
             <% if (advices[i].solutionID) { %>
               <td><%= advices[i].solutionID %></td>
             <% } else { %>
@@ -62,11 +60,6 @@
             <% } %>
             <% if (advices[i].userID) { %>
               <td><%= advices[i].userID %></td>
-            <% } else { %>
-              <td></td>
-            <% } %>
-            <% if (advices[i].username) { %>
-              <td><%= advices[i].username %></td>
             <% } else { %>
               <td></td>
             <% } %>
