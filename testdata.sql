@@ -11,7 +11,7 @@ VALUES
 
 INSERT INTO Type(typeName)
 VALUES
-('Writing'),
+('Grammar'),
 ('Astronomy'),
 ('Probability'),
 ('Algorithm Analysis'),
@@ -61,7 +61,7 @@ VALUES
 (2, 'Quicksort', 'What is the time complexity of quicksort?', 4, 'Algorithm Analysis', 213, 'CPSC', 2.5),
 (12, 'LCFS', 'When arc costs are equal, what search algorithm is LCFS equivalent to?', 5, 'AI', 322, 'CPSC', 3),
 (10, 'Die Rolling', 'You roll a fair die until the first 1 comes up. What is the probability that the number of tosses is odd?', 3, 'Probability', 302, 'MATH', 3),
-(3, 'There vs Their', 'Should I use there or their in the following sentence: "Is ____ going to be a party tomorrow', 2, 'Writing', 112, 'ENGL', 1),
+(3, 'There vs Their', 'Should I use there or their in the following sentence: "Is ____ going to be a party tomorrow', 2, 'Grammar', 112, 'ENGL', 1),
 (5, 'Riemann Sum', 'Estimate the area between f(x) = x^3 - 2x^2 + 4 and the x-axis on [1,4] using the right end points of the subintervals for the height of the rectangles.', 1, 'Calculus', 200, 'MATH', 2.3),
 (1, 'Stack Smash Attacks', "Are stack smash attacks possible on architectures that deploy a stack that grows down instead of up?", 4, 'Computer Systems', 213, 'CPSC', 2.5),
 (4, 'Address Alignment', 'Is 0x000073bc aligned to store an 8-byte integer?', 3, 'Computer Systems', 213, 'CPSC', 1.5),
