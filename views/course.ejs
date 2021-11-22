@@ -3,6 +3,11 @@
 <main>
   <div class="container">
     <h3>Course List</h3>
+    <% if (isAdmin) { %>
+      <div>
+        <a href="/course/create" class="btn btn-primary">create new course</a>
+      </div>
+    <% } %> 
     <table class="table table-striped">
       <thead>
         <tr>
@@ -49,6 +54,7 @@
         <% } %>
       </tbody>
     </table>
+    <div style="height: 100px;"></div>
   </div>
 </main>
 
