@@ -13,12 +13,15 @@ app.use(urlencoded({ extended: false }))
 // user
 let user = null;
 let userId = null;
-const setUser = (username, userID) => {
+let isAdmin = null;
+const setUser = (username, userID, admin) => {
     user = username;
     userId = userID;
+    isAdmin = admin;
 }
 const setUserToData = (data) => {
     data.user = user;
+    data.isAdmin = isAdmin;
     return data;
 }
 
@@ -39,9 +42,9 @@ app.post('/signup', (req, res, next) => {
     }
     connection.query(`insert into User(username, isAdmin) values('${username}', ${isAdmin})`, (err, result) => {
       if (err) return next(err);
-      connection.query(`select userID, username from User where username='${username}'`, (err2, result2) => {
+      connection.query(`select userID, username, isAdmin from User where username='${username}'`, (err2, result2) => {
         if (err2) return next(err2);
-        setUser(username, result2[0].userID);
+        setUser(username, result2[0].userID, result2[0].isAdmin);
         res.redirect('/');
       });
     })
@@ -54,10 +57,10 @@ app.get('/login', (req, res) => {
 });
 app.post('/login', (req, res, next) => {
     const username = req.body.username;
-    connection.query(`select userID, username from User where username='${username}'`, (err, result) => {
+    connection.query(`select userID, username, isAdmin from User where username='${username}'`, (err, result) => {
         if (err) return next(err);
         if (result.length == 1) {
-          setUser(result[0].username, result[0].userID);
+          setUser(result[0].username, result[0].userID, result[0].isAdmin);
         }
         console.log(user + ' ' + userId);
         res.redirect('/');
@@ -865,6 +868,48 @@ app.get('/course', (req, res, next) => {
       context.registerCourses = result;
       res.render('course', setUserToData(context));
     });
+  });
+});
+app.get('/course/create', (req, res, next) => {
+  const context = {};
+  const queryString = `
+  select * from Course c, Departmentfaculty d
+  where c.department = d.department
+  `;
+  connection.query(queryString, (err, result) => {
+    if (err) return next(err);
+
+    context.courseFaculties = result;
+    res.render('createCourse', setUserToData(context));
+  });
+});
+app.post('/course/create', (req, res, next) => {
+  const queryString = `
+  select * from Departmentfaculty where department='${req.body.department}'
+  `;
+
+  let department = req.body.department;
+  let faculty = req.body.faculty;
+  connection.query(queryString, (err, result) => {
+    if (err) return next(err);
+
+    if (result.length === 0) {
+      connection.query(`insert into Departmentfaculty(department,faculty) values('${department}','${faculty}')`, (err1, result1) => {
+        if (err1) return next(err1);
+
+        connection.query(`insert into Course(courseNum, department) values(${req.body.courseNum},'${department}')`, (err2, result2) => {
+          if (err2) return next(err2);
+
+          return res.redirect('/course/create');
+        })
+      });
+    } else {
+      connection.query(`insert into Course(courseNum, department) values(${req.body.courseNum},'${department}')`, (err2, result2) => {
+        if (err2) return next(err2);
+
+        return res.redirect('/course/create');
+      });
+    }
   });
 });
 app.post('/register', (req, res, next) => {
