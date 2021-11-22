@@ -476,7 +476,7 @@ app.get('/solution/avgConfidence', (req, res, next) => {
 
 app.get('/advice', (req, res, next) => {
   const context = {};
-  connection.query('select * from Advice', (err,result) => {
+  connection.query('select * from Advice inner join User on Advice.userID = User.userID', (err,result) => {
     if (err) return next(err);
 
     context.advices = result;
@@ -639,8 +639,7 @@ const getOrCreateVR = (sid, aid, uid) => {
 
       if (result.length === 0) {
         try {
-          const created = await createVoteRecord(sid, aid, uid);
-          console.log(created);
+          await createVoteRecord(sid, aid, uid);
           connection.query(queryString, (err2, result2) => {
             if (err2) return reject(err2);
 
@@ -655,6 +654,12 @@ const getOrCreateVR = (sid, aid, uid) => {
     });
   })
 }
+
+/**
+ * up
+ * normal
+ * down
+ */
 const updateVoteNum = (voteNum, sid, aid) => {
   return new Promise((resolve, reject) => {
     connection.query(`update Advice set voteNum=${voteNum} where solutionID=${sid} and adviceID=${aid}`, (err, result) => {
@@ -672,6 +677,24 @@ const updateVoteRecord = (sid, aid, uid, statusStr) => {
       return resolve(result);
     });
   }); 
+}
+const createVotePos = (voteNum) => {
+  const pos = (voteNum > 0)? 'Positive': (voteNum === 0)? 'Neutral': 'Negative';
+  return new Promise((resolve, reject) => {
+    connection.query(`select * from VoteNumPosition where voteNum=${voteNum}`, (err, result) => {
+      if (err) return reject(err);
+
+      if (result.length === 0) {
+        connection.query(`insert into VoteNumPosition(voteNum, votePos) values(${voteNum}, '${pos}')`, (err1, result1) => {
+          if (err1) return reject(err1);
+
+          return resolve(result1);
+        });
+      } else {
+        return resolve(result);
+      }
+    });
+  });
 }
 app.post('/advice/upvote/', async (req, res, next) => {
   const context = {};
@@ -693,9 +716,11 @@ app.post('/advice/upvote/', async (req, res, next) => {
   }
   try {
     if (voteRecord[0].status === 'normal') {
+      await createVotePos(voteNum + 1);
       await updateVoteNum(voteNum + 1, sid, aid);
       await updateVoteRecord(sid, aid, userId, 'up');
     } else if (voteRecord[0].status === 'down') {
+      await createVotePos(voteNum + 1);
       await updateVoteNum(voteNum + 1, sid, aid);
       await updateVoteRecord(sid, aid, userId, 'normal');
     }
@@ -735,9 +760,11 @@ app.post('/advice/downvote/', async (req, res, next) => {
   }
   try {
     if (voteRecord[0].status === 'normal') {
+      await createVotePos(voteNum - 1);
       await updateVoteNum(voteNum - 1, sid, aid);
       await updateVoteRecord(sid, aid, userId, 'down');
     } else if (voteRecord[0].status === 'up') {
+      await createVotePos(voteNum - 1);
       await updateVoteNum(voteNum - 1, sid, aid);
       await updateVoteRecord(sid, aid, userId, 'normal');
     }
