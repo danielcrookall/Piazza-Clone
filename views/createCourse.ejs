@@ -1,0 +1,42 @@
+<%- include('./partials/header.ejs'); %>
+
+<main>
+  <div class="container">
+    <h3>Course & Faculty</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Faculty</th>
+          <th scope="col">Department</th>
+          <th scope="col">Course Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < courseFaculties.length; i++) { %>
+          <tr>
+            <td><%= courseFaculties[i].faculty %></td>
+            <td><%= courseFaculties[i].department %></td>
+            <td><%= courseFaculties[i].courseNum %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <div style="display: flex;">
+      <div style="margin: 20px;">
+        <h5 style="margin: 5px;">Create Course & Faculty</h5>
+        <form action="/course/create" method="post">
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">Faculty</span>
+            <input type="text" name='faculty' class="form-control" required>
+            <span class="input-group-text" id="basic-addon1">Department</span>
+            <input type="text" name='department' class="form-control" required>
+            <span class="input-group-text" id="basic-addon1">Course Number</span>
+            <input type="text" name='courseNum' class="form-control" required>
+          </div>
+          <input type="submit" class="btn btn-primary" value="create">
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
