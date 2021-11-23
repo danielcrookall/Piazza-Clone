@@ -7,12 +7,14 @@
 2.
   - create `.env` file
   - write your environment variable
-  ```
-  DB_HOST=dbserver.students.cs.ubc.ca
-  CWL=<your cwl id>
-  DB_PASSWORD=<letter 'a' followed by your student number>
-  DB=<your cwl id>
-  ```
+    -  Example on ubc remote server
+    ```
+    DB_HOST=dbserver.students.cs.ubc.ca
+    CWL=<your cwl id>
+    DB_PASSWORD=<letter 'a' followed by your student number>
+    DB=<your cwl id>
+    ```
+    - CWL: username of database
 
 ### How to start app
 - ```npm start```
