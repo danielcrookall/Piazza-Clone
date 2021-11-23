@@ -19,7 +19,7 @@
 ### How to start app
 - ```npm start```
 
-### The way to connect MySQL manually
+### The way to connect MySQL manually (UBC Remote Server)
   - Log into MySQL by running:
 `mysql -h dbserver.students.cs.ubc.ca -u 'your cwl' -p`
   - When prompted for your password, enter the letter a followed by your student number. For example, if your student number was 12345678 then your password would be a12345678. 
