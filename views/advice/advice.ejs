@@ -8,18 +8,44 @@
     </div>
     <div style="display: flex;">
       <p style="margin-right: 10px; font-size: large;">Filter</p>
-      <form action="/advice/select" method="post" style="display: flex;">
-        <div>
-          <input class="form-check-input" type="checkbox" name="comment-column" value="1">
-          <label class="form-check-label" for="comment-column">comment</label>
+      <form action="/advice/select" method="post">
+        <div style="display: flex;">
+          <div>
+            <input class="form-check-input" type="checkbox" name="comment-column" value="1">
+            <label class="form-check-label" for="comment-column">comment</label>
+          </div>
+          <div style="margin: 5px;">
+            <input class="form-check-input" type="checkbox" name="userid-column" value="1">
+            <label class="form-check-label" for="userid-column">userID</label>
+          </div>
+          <div>
+            <input class="form-check-input" type="checkbox" name="votenum-column" value="1">
+            <label class="form-check-label" for="votenum-column">Vote Num</label>
+          </div>
         </div>
-        <div style="margin: 5px;">
-          <input class="form-check-input" type="checkbox" name="userid-column" value="1">
-          <label class="form-check-label" for="userid-column">userID</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">Solution ID</span>
+          <select class="form-select" name="solutionid_op" style="max-width: 100px;" required>
+            <option value="=">=</option>
+            <option value="<>">not equal</option>
+            <option value=">">></option>
+            <option value="<"><</option>
+            <option value=">=">>=</option>
+            <option value="<="><=</option>
+          <input type="text" name="solutionid_opd" class="form-control"
+            placeholder="value">
         </div>
-        <div>
-          <input class="form-check-input" type="checkbox" name="votenum-column" value="1">
-          <label class="form-check-label" for="votenum-column">Vote Num</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">Advice ID</span>
+          <select class="form-select" name="adviceid_op" style="max-width: 100px;" required>
+            <option value="=">=</option>
+            <option value="<>">not equal</option>
+            <option value=">">></option>
+            <option value="<"><</option>
+            <option value=">=">>=</option>
+            <option value="<="><=</option>
+          <input type="text" name="adviceid_opd" class="form-control"
+            placeholder="value">
         </div>
         <input type="submit" class="btn btn-info" value="Select"/>
       </form>

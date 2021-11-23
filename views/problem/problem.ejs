@@ -8,26 +8,52 @@
     </div>
     <div style="display: flex;">
       <p style="margin-right: 10px; font-size: large;">Filter</p>
-      <form action="/problem/select" method="post" style="display: flex;">
-        <div>
-          <input class="form-check-input" type="checkbox" name="title-column" value="1">
-          <label class="form-check-label" for="title-column">Title</label>
+      <form action="/problem/select" method="post">
+        <div style="display: flex;">
+          <div>
+            <input class="form-check-input" type="checkbox" name="title-column" value="1">
+            <label class="form-check-label" for="title-column">Title</label>
+          </div>
+          <div>
+            <input class="form-check-input" type="checkbox" name="body-column" value="1">
+            <label class="form-check-label" for="body-column">Body</label>
+          </div>
+          <div>
+            <input class="form-check-input" type="checkbox" name="diff-column" value="1">
+            <label class="form-check-label" for="diff-column">Difficulty</label>
+          </div>
+          <div>
+            <input class="form-check-input" type="checkbox" name="course-column" value="1">
+            <label class="form-check-label" for="course-column">Course</label>
+          </div>
+          <div>
+            <input class="form-check-input" type="checkbox" name="type-column" value="1">
+            <label class="form-check-label" for="type-column">Problem Type</label>
+          </div>
         </div>
-        <div>
-          <input class="form-check-input" type="checkbox" name="body-column" value="1">
-          <label class="form-check-label" for="body-column">Body</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">Problem ID</span>
+          <select class="form-select" name="problemid_op" style="max-width: 100px;" required>
+            <option value="=">=</option>
+            <option value="<>">not equal</option>
+            <option value=">">></option>
+            <option value="<"><</option>
+            <option value=">=">>=</option>
+            <option value="<="><=</option>
+          <input type="text" name="problemid_opd" class="form-control"
+            placeholder="value">
         </div>
-        <div>
-          <input class="form-check-input" type="checkbox" name="diff-column" value="1">
-          <label class="form-check-label" for="diff-column">Difficulty</label>
-        </div>
-        <div>
-          <input class="form-check-input" type="checkbox" name="course-column" value="1">
-          <label class="form-check-label" for="course-column">Course</label>
-        </div>
-        <div>
-          <input class="form-check-input" type="checkbox" name="type-column" value="1">
-          <label class="form-check-label" for="type-column">Problem Type</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">User ID</span>
+          <select class="form-select" name="userid_op" style="max-width: 100px;" required>
+            <option value="=">=</option>
+            <option value="<>">not equal</option>
+            <option value=">">></option>
+            <option value="<"><</option>
+            <option value=">=">>=</option>
+            <option value="<="><=</option>
+          <input type="text" name="userid_opd" class="form-control"
+            placeholder="value">
         </div>
         <input type="submit" class="btn btn-info" value="Select"/>
       </form>
