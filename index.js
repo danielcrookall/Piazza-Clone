@@ -300,9 +300,14 @@ app.post('/problem/select', (req, res, next) => {
   }
 
   const projectString = projectColumns.join(', ');
+
+  const problemID = (req.body.problemid_opd)?`problemID${req.body.problemid_op}${req.body.problemid_opd}`:'problemID>0';
+  const userID = (req.body.userid_opd)?`userID${req.body.userid_op}${req.body.userid_opd}`:'userID>0';
+
   const context = {};
   
-  connection.query(`select ${projectString} from Problem`, (err, result) => {
+  context.averageDiffDept = null;
+  connection.query(`select ${projectString} from Problem where ${problemID} and ${userID}`, (err, result) => {
     if (err) return next(err);
 
     context.problems = result;
@@ -532,19 +537,24 @@ app.post('/advice/delete', (req, res, next) => {
 app.post('/advice/select', (req, res, next) => {
   const projectColumns = ['solutionID', 'adviceID'];
   if (req.body['comment-column']) {
-    projectColumns.push('comment');
+    projectColumns.push('Advice.comment');
   }
   if (req.body['userid-column']) {
-    projectColumns.push('userID');
+    projectColumns.push('Advice.userID');
   }
   if (req.body['votenum-column']) {
-    projectColumns.push('voteNum');
+    projectColumns.push('Advice.voteNum');
   }
+  projectColumns.push('username');
+
+  const solutionID = (req.body.solutionid_opd)?`solutionID${req.body.solutionid_op}${req.body.solutionid_opd}`:'solutionID>0';
+  const adviceID = (req.body.adviceid_opd)?`adviceID${req.body.adviceid_op}${req.body.adviceid_opd}`:'adviceID>0';
 
   const projectString = projectColumns.join(', ');
 
   const context = {};
-  connection.query(`select ${projectString} from Advice`, (err,result) => {
+  connection.query(`select ${projectString} from Advice inner join User on Advice.userID = User.userID
+                    where ${solutionID} and ${adviceID}`, (err,result) => {
     if (err) return next(err);
 
     context.advices = result;
@@ -731,7 +741,7 @@ app.post('/advice/upvote/', async (req, res, next) => {
     return next(err);
   }
 
-  connection.query('select * from Advice', (err,result) => {
+  connection.query('select * from Advice inner join User on Advice.userID = User.userID', (err,result) => {
     if (err) return next(err);
 
     context.advices = result;
@@ -775,7 +785,7 @@ app.post('/advice/downvote/', async (req, res, next) => {
     return next(err);
   }
 
-  connection.query('select * from Advice', (err,result) => {
+  connection.query('select * from Advice inner join User on Advice.userID = User.userID', (err,result) => {
     if (err) return next(err);
 
     context.advices = result;
