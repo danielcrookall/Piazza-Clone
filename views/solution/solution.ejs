@@ -1,0 +1,61 @@
+<%- include('../partials/header.ejs'); %>
+
+<main>
+  <div class="container">
+    <div>
+      <h3>Solution</h3>
+      <a href="/solution/delete" class="btn btn-danger">delete operation</a>
+      <a href="/solution/update" class="btn btn-warning">update operation</a>
+    </div>
+    <div style="margin: 20px 5px 5px 5px;">
+      <form action="/solution/avgConfidence" method="get">
+        <input type="submit" class="btn btn-outline-primary" value="Average Confidence per user">
+      </form>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">solutionID</th>
+          <th scope="col">body</th>
+          <th scope="col">userID</th>
+          <th scope="col">problemID</th>
+          <th scope="col">Confidence Rate (%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < solutions.length; i++) {%>
+          <tr>
+            <td><%= solutions[i].solutionID %></td>
+            <td><%= solutions[i].body %></td>
+            <td><%= solutions[i].userID %></td>
+            <td><%= solutions[i].problemID %></td>
+            <td><%= solutions[i].confidence %> %</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <div>
+      <h3>Create new Solution</h3>
+      <form action="/solution" method="post">
+        <input type="submit" class="btn btn-primary" value="Create">
+        <div class="input-group">
+          <span class="input-group-text">Body</span>
+          <textarea class="form-control" name='body' required></textarea>
+        </div>
+        <div class="input-group">
+          <label for="confidence" class="form-class">Confidence Rate</label>
+          <input type="range" name="confidence" class="form-range" min="0" max="100" step="5" id="confidence" required>
+        </div>
+        <div class="input-group">
+          <label for="problem">Problem</label>
+          <select class="form-select" name="problem" required>
+            <% for(let i = 0; i < problems.length; i++) {%>
+              <option value="<%= problems[i].problemID %>"><%= problems[i].title %></option>
+            <% } %>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div style="height: 100px;"></div>
+  </div>
+</main>

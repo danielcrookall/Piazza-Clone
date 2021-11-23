@@ -1,0 +1,139 @@
+<%- include('./partials/header.ejs'); %>
+
+<main>
+  <div class="container">
+    <h3>Searching</h3>
+    <div>
+      <form action="/select" method="post">
+        <div class="input-group">
+          <label for="solution">Table</label>
+          <select class="form-select" name="tableName" id="tableName" required onchange="changeColumns()">
+            <% for(let i = 0; i < tableNames.length; i++) {%>
+              <option value="<%= tableNames[i] %>"><%= tableNames[i] %></option>
+            <% } %>
+          </select>
+        </div>
+        <span>Columns</span>
+        <div class="input-group" id="tableColumns" style="height: 50px; margin: 10px;">
+        </div>
+        <div class="input-group">
+          <span class="input-group-text" id="basic-addon1">Condition</span>
+        </div>
+        <div id="tableConditions">
+        </div>
+        <input type="submit" class="btn btn-info" value="Submit">
+      </form>
+    </div>
+    <% if (table !== null) { %>
+      <h3><%= table.tableName %> </h3>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <% for (let i = 0; i < table.thead.length; i++) { %>
+              <th scope="col">
+                <%= table.thead[i] %> 
+              </th>
+            <% } %>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (let i = 0; i < table.tbody.length; i++) { %>
+            <tr>
+              <% for (let j = 0; j < table.tbody[i].length; j++) { %>
+                <td><%= table.tbody[i][j] %> </td>
+              <% } %>
+            </tr>
+          <% } %> 
+        </tbody>
+      </table>
+    <% } %>
+    <div style="height: 100px;"></div>
+  </div>
+</main>
+
+<script>
+  const changeColumns = () => {
+    const e = document.getElementById('tableName')
+    const tableName = e.options[e.selectedIndex].text;
+    console.log(tableName);
+    const columns = {};
+    let cols = '';
+    cols = '<%- UserColumns %>';
+    columns.User = cols.split(',');
+    cols = '<%- TypeColumns %>';
+    columns.Type = cols.split(',');
+    cols = '<%- DepartmentFacultyColumns %>';
+    columns.DepartmentFaculty = cols.split(',');
+    cols = '<%- CourseColumns %>';
+    columns.Course = cols.split(',');
+    cols = '<%- RegisterColumns %>';
+    columns.Register = cols.split(',');
+    cols = '<%- ProblemColumns %>';
+    columns.Problem = cols.split(',');
+    cols = '<%- AdminColumns %>';
+    columns.Admin = cols.split(',');
+    cols = '<%- SolutionColumns %>';
+    columns.Solution = cols.split(',');
+    cols = '<%- AdviceRequestColumns %>';
+    columns.AdviceRequest = cols.split(',');
+    cols = '<%- VoteNumPositionColumns %>';
+    columns.VoteNumPosition = cols.split(',');
+    cols = '<%- AdviceColumns %>';
+    columns.Advice = cols.split(',');
+    cols = '<%- VoteRecordColumns %>';
+    columns.VoteRecord = cols.split(',');
+    
+    const fields = columns[`${tableName}`];
+    const tableColumns = document.getElementById('tableColumns');
+    while (tableColumns.hasChildNodes()) {  
+      tableColumns.removeChild(tableColumns.firstChild);
+    }
+    for (let i = 0; i < fields.length; i++) {
+      const div = document.createElement('div');
+      const input = document.createElement('input');
+      input.className = 'form-check-input';
+      input.type = 'checkbox';
+      input.name = `${fields[i]}-column`;
+      input.value = '1';
+      const label = document.createElement('label');
+      label.className = 'form-check-label';
+      label.for = `${fields[i]}-column`;
+      label.innerText = `${fields[i]}`;
+      div.appendChild(input);
+      div.appendChild(label);
+      tableColumns.appendChild(div);
+    }
+    const tableConditions = document.getElementById('tableConditions');
+    while (tableConditions.hasChildNodes()) {  
+      tableConditions.removeChild(tableConditions.firstChild);
+    }
+    const options = ['=', '<>', '>', '<', '>=', '<=', 'like'];
+    for (let i = 0; i < fields.length; i++) {
+      const div = document.createElement('div');
+      div.className = 'input-group mb-3';
+      const span = document.createElement('span');
+      span.className= 'input-group-text';
+      span.innerText = `${fields[i]}`;
+      const select = document.createElement('select');
+      select.className = 'form-select';
+      select.name = `${fields[i]}_op`;
+      for (let j = 0; j < options.length; j++) {
+        const optionVal = options[j];
+        const option = document.createElement('option');
+        option.value = optionVal;
+        option.innerText = (optionVal !== 'like')? optionVal : 'includes';
+        select.appendChild(option);
+      }
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.name = `${fields[i]}_opd`;
+      input.className = 'form-control';
+      input.placeholder = 'value';
+      div.appendChild(span);
+      div.appendChild(select);
+      div.appendChild(input);
+      tableConditions.appendChild(div);
+    }
+  }
+  changeColumns();
+</script>

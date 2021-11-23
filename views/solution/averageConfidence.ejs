@@ -1,0 +1,25 @@
+<%- include('../partials/header.ejs'); %>
+
+<main>
+  <div class="container">
+    <div>
+      <h3>Solution --- Average Confidence Rate per User</h3>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Username</th>
+          <th scope="col">Average Confidence Rate (%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < avgConfidences.length; i++) {%>
+          <tr>
+            <td><%= avgConfidences[i].username %></td>
+            <td><%= avgConfidences[i].avgConfidence %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</main>

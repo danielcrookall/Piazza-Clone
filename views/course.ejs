@@ -1,0 +1,60 @@
+<%- include('./partials/header.ejs'); %>
+
+<main>
+  <div class="container">
+    <h3>Course List</h3>
+    <% if (isAdmin) { %>
+      <div>
+        <a href="/course/create" class="btn btn-primary">create new course</a>
+      </div>
+    <% } %> 
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Department</th>
+          <th scope="col">Course Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < courses.length; i++) {%>
+          <tr>
+            <td><%= courses[i].department %> </td>
+            <td><%= courses[i].courseNum %> </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <div style="display: flex;">
+      <h3 style="margin: 5px;">Registered Course List of <%= user %> </h3>
+      <div style="margin: 20px; background-color: gainsboro;">
+        <h5 style="margin: 5px;">Register Course</h5>
+        <form action="/register" method="post">
+          <select class="form-select" name="register" id="department">
+            <% for(let i = 0; i < courses.length; i++) {%>
+              <option value="<%= courses[i].department %> <%= courses[i].courseNum %>"><%= courses[i].department %> <%= courses[i].courseNum %></option>
+            <% } %>
+          </select>
+          <input type="submit" class="btn btn-primary" value="register">
+        </form>
+      </div>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Department</th>
+          <th scope="col">Course Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < registerCourses.length; i++) {%>
+          <tr>
+            <td><%= registerCourses[i].department %> </td>
+            <td><%= registerCourses[i].courseNum %> </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <div style="height: 100px;"></div>
+  </div>
+</main>
+

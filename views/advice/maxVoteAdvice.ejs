@@ -1,0 +1,30 @@
+<%- include('../partials/header.ejs'); %>
+
+<main>
+  <div class="container">
+    <div>
+      <h3>Advice --- Maximum voting number for each solutions</h3>
+    </div>
+    
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">solutionID</th>
+          <th scope="col">solution body</th>
+          <th scope="col">advice comment</th>
+          <th scope="col">vote number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < maxVoteAdvice.length; i++) {%>
+          <tr>
+            <td><%= maxVoteAdvice[i].solutionID %></td>
+            <td><%= maxVoteAdvice[i].body %></td>
+            <td><%= maxVoteAdvice[i].comment %></td>
+            <td><%= maxVoteAdvice[i].maxVoteNum %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</main>

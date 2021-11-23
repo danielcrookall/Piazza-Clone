@@ -1,0 +1,188 @@
+<%- include('../partials/header.ejs'); %>
+
+<main>
+  <div class="container">
+    <div>
+      <h3>Problems</h3>
+      <a href="/problem/update" class="btn btn-warning">update operation</a>
+    </div>
+    <div style="display: flex;">
+      <p style="margin-right: 10px; font-size: large;">Filter</p>
+      <form action="/problem/select" method="post">
+        <div style="display: flex;">
+          <div>
+            <input class="form-check-input" type="checkbox" name="title-column" value="1">
+            <label class="form-check-label" for="title-column">Title</label>
+          </div>
+          <div>
+            <input class="form-check-input" type="checkbox" name="body-column" value="1">
+            <label class="form-check-label" for="body-column">Body</label>
+          </div>
+          <div>
+            <input class="form-check-input" type="checkbox" name="diff-column" value="1">
+            <label class="form-check-label" for="diff-column">Difficulty</label>
+          </div>
+          <div>
+            <input class="form-check-input" type="checkbox" name="course-column" value="1">
+            <label class="form-check-label" for="course-column">Course</label>
+          </div>
+          <div>
+            <input class="form-check-input" type="checkbox" name="type-column" value="1">
+            <label class="form-check-label" for="type-column">Problem Type</label>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">Problem ID</span>
+          <select class="form-select" name="problemid_op" style="max-width: 100px;" required>
+            <option value="=">=</option>
+            <option value="<>">not equal</option>
+            <option value=">">></option>
+            <option value="<"><</option>
+            <option value=">=">>=</option>
+            <option value="<="><=</option>
+          <input type="text" name="problemid_opd" class="form-control"
+            placeholder="value">
+        </div>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">User ID</span>
+          <select class="form-select" name="userid_op" style="max-width: 100px;" required>
+            <option value="=">=</option>
+            <option value="<>">not equal</option>
+            <option value=">">></option>
+            <option value="<"><</option>
+            <option value=">=">>=</option>
+            <option value="<="><=</option>
+          <input type="text" name="userid_opd" class="form-control"
+            placeholder="value">
+        </div>
+        <input type="submit" class="btn btn-info" value="Select"/>
+      </form>
+    </div>
+    <div style="margin: 10px;">
+      <form action="/problem/avgDiffDept" method="post" style="display: flex;">
+        <div class="input-group" style="max-width: 80%;">
+          <span class="input-group-text">Average Difficulty for each Departments</span>
+          <select name="diffOpr" class="form-select">
+            <option value="more">greater than</option>
+            <option value="less">less than</option>
+          </select>
+          <input type="text" class="form-control" name="diffOpd" 
+            placeholder="average difficulty" required>
+        </div>
+        <input type="submit" class="btn btn-outline-secondary" value="show">
+      </form>
+      <% if (averageDiffDept) { %>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Department</th>
+              <th scope="col">Average Difficulty</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(let i = 0; i < averageDiffDept.length; i++) {%>
+              <tr>
+                <td><%= averageDiffDept[i].department %></td>
+                <td><%= averageDiffDept[i].avgDiff %></td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      <% } %> 
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">problemID</th>
+          <th scope="col">title</th>
+          <th scope="col">body</th>
+          <th scope="col">userID</th>
+          <th scope="col">Problem Type (typeName)</th>
+          <th scope="col">Course Number (courseNum)</th>
+          <th scope="col">Department (department)</th>
+          <th scope="col">Difficulty (difficulty)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < problems.length; i++) {%>
+          <tr>
+            <% if (problems[i].problemID) { %>
+              <td><%= problems[i].problemID %></td>
+            <% } else { %>
+            <% } %>
+            <% if (problems[i].title) { %>
+              <td><%= problems[i].title %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <% if (problems[i].body) { %>
+              <td><%= problems[i].body %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <% if (problems[i].userID) { %>
+              <td><%= problems[i].userID %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <% if (problems[i].typeName) { %>
+              <td><%= problems[i].typeName %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <% if (problems[i].courseNum) { %>
+              <td><%= problems[i].courseNum %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <% if (problems[i].department) { %>
+              <td><%= problems[i].department %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <% if (problems[i].difficulty) { %>
+              <td><%= problems[i].difficulty %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <div>
+      <h3>Create new Problem</h3>
+      <form action="/problem" method="post">
+        <input type="submit" class="btn btn-primary" value="Create">
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">Title</span>
+          <input type="text" name='title' class="form-control" required>
+        </div>
+        <div class="input-group">
+          <span class="input-group-text">Body</span>
+          <textarea class="form-control" name='body' required></textarea>
+        </div>
+        <div class="input-group">
+          <label for="difficulty" class="form-class">Difficulty</label>
+          <input type="range" name="difficulty" class="form-range" min="0" max="5" step="0.5" id="difficulty" required>
+        </div>
+        <div class="input-group">
+          <label for="course">Course</label>
+          <select class="form-select" name="course" required>
+            <% for(let i = 0; i < courses.length; i++) {%>
+              <option value="<%= courses[i].department %> <%= courses[i].courseNum %>"><%= courses[i].department %> <%= courses[i].courseNum %></option>
+            <% } %>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="typeName">Problem Type</label>
+          <select class="form-select" name="typeName" required>
+            <% for(let i = 0; i < types.length; i++) {%>
+              <option value="<%= types[i].typeName %>"><%= types[i].typeName %></option>
+            <% } %>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div style="height: 100px;"></div>
+  </div>
+</main>

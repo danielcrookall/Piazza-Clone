@@ -1,0 +1,153 @@
+<%- include('../partials/header.ejs'); %>
+
+<main>
+  <div class="container">
+    <div>
+      <h3>Advice</h3>
+      <a href="/advice/delete" class="btn btn-danger">detele operation</a>
+    </div>
+    <div style="display: flex;">
+      <p style="margin-right: 10px; font-size: large;">Filter</p>
+      <form action="/advice/select" method="post">
+        <div style="display: flex;">
+          <div>
+            <input class="form-check-input" type="checkbox" name="comment-column" value="1">
+            <label class="form-check-label" for="comment-column">comment</label>
+          </div>
+          <div style="margin: 5px;">
+            <input class="form-check-input" type="checkbox" name="userid-column" value="1">
+            <label class="form-check-label" for="userid-column">userID</label>
+          </div>
+          <div>
+            <input class="form-check-input" type="checkbox" name="votenum-column" value="1">
+            <label class="form-check-label" for="votenum-column">Vote Num</label>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">Solution ID</span>
+          <select class="form-select" name="solutionid_op" style="max-width: 100px;" required>
+            <option value="=">=</option>
+            <option value="<>">not equal</option>
+            <option value=">">></option>
+            <option value="<"><</option>
+            <option value=">=">>=</option>
+            <option value="<="><=</option>
+          <input type="text" name="solutionid_opd" class="form-control"
+            placeholder="value">
+        </div>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1">Advice ID</span>
+          <select class="form-select" name="adviceid_op" style="max-width: 100px;" required>
+            <option value="=">=</option>
+            <option value="<>">not equal</option>
+            <option value=">">></option>
+            <option value="<"><</option>
+            <option value=">=">>=</option>
+            <option value="<="><=</option>
+          <input type="text" name="adviceid_opd" class="form-control"
+            placeholder="value">
+        </div>
+        <input type="submit" class="btn btn-info" value="Select"/>
+      </form>
+    </div>
+    <div style="margin: 10px;">
+      <form action="/advice/whose" method="post" style="display: flex;">
+        <div class="input-group" style="max-width: 400px;">
+          <span class="input-group-text">Whose Advice?</span>
+          <input type="text" class="form-control" name='username' 
+            placeholder="username (example: Robert)" required>
+        </div>
+        <input type="submit" class="btn btn-outline-secondary">
+      </form>
+    </div>
+    <div style="margin: 10px;">
+      <form action="/advice/maxVoteAdvice" method="get" style="display: flex;">
+        <div class="input-group" style="max-width: 700px;">
+          <span class="input-group-text">Find the comment of the advice with maximum voting number for each solutions</span>
+          <input type="submit" class="btn btn-outline-secondary">
+        </div>
+      </form>
+    </div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">solutionID</th>
+          <th scope="col">adviceID</th>
+          <th scope="col">comment</th>
+          <th scope="col">userID</th>
+          <th scope="col">username</th>
+          <th scope="col">Vote Number (voteNum)</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < advices.length; i++) {%>
+          <tr>
+            <% if (advices[i].solutionID) { %>
+              <td><%= advices[i].solutionID %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <td><%= advices[i].adviceID %></td>
+            <% if (advices[i].comment) { %>
+              <td><%= advices[i].comment %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <% if (advices[i].userID) { %>
+              <td><%= advices[i].userID %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <% if (advices[i].username) { %>
+              <td><%= advices[i].username %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <% if (advices[i].voteNum >= 0 || advices[i].voteNum < 0) { %>
+              <td><%= advices[i].voteNum %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
+            <form action="/advice/upvote" method="post">
+              <td>
+                <input type="hidden" name="solutionID" value="<%= advices[i].solutionID %>">
+                <input type="hidden" name="adviceID" value="<%= advices[i].adviceID %>">
+                <input type="hidden" name="voteNum" value="<%= advices[i].voteNum %>">
+                <input type="submit" class="btn btn-success" value="Up">
+              </td>
+            </form>
+            <form action="/advice/downvote" method="post">
+              <td>
+                <input type="hidden" name="solutionID" value="<%= advices[i].solutionID %>">
+                <input type="hidden" name="adviceID" value="<%= advices[i].adviceID %>">
+                <input type="hidden" name="voteNum" value="<%= advices[i].voteNum %>">
+                <input type="submit" class="btn btn-danger" value="Down">
+              </td>
+            </form>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <div>
+      <h3>Create new Advice</h3>
+      <form action="/advice" method="post">
+        <input type="submit" class="btn btn-primary" value="Create">
+        <div class="input-group">
+          <label for="solution">Solution</label>
+          <select class="form-select" name="solution" required>
+            <% for(let i = 0; i < solutions.length; i++) {%>
+              <option value="<%= solutions[i].solutionID %>"><%= solutions[i].body %></option>
+            <% } %>
+          </select>
+        </div>
+        <div class="input-group">
+          <span class="input-group-text">Comment</span>
+          <textarea class="form-control" name='comment' required></textarea>
+        </div>
+      </form>
+    </div>
+    <div style="height: 100px;"></div>
+  </div>
+</main>
