@@ -467,7 +467,7 @@ app.post('/solution/delete', (req, res, next) => {
 app.get('/solution/avgConfidence', (req, res, next) => {
   const context = {};
   
-  connection.query(`select username, CAST(AVG(confidence) as decimal(10)) as avgConfidence from solution s, user u 
+  connection.query(`select username, CAST(AVG(confidence) as decimal(10)) as avgConfidence from Solution s, User u 
   where s.userID = u.userID group by u.username`, (err,result) => {
     if (err) return next(err);
     context.avgConfidences = result;   
@@ -883,7 +883,7 @@ app.get('/course', (req, res, next) => {
 app.get('/course/create', (req, res, next) => {
   const context = {};
   const queryString = `
-  select * from Course c, Departmentfaculty d
+  select * from Course c, DepartmentFaculty d
   where c.department = d.department
   `;
   connection.query(queryString, (err, result) => {
@@ -895,7 +895,7 @@ app.get('/course/create', (req, res, next) => {
 });
 app.post('/course/create', (req, res, next) => {
   const queryString = `
-  select * from Departmentfaculty where department='${req.body.department}'
+  select * from DepartmentFaculty where department='${req.body.department}'
   `;
 
   let department = req.body.department;
@@ -904,7 +904,7 @@ app.post('/course/create', (req, res, next) => {
     if (err) return next(err);
 
     if (result.length === 0) {
-      connection.query(`insert into Departmentfaculty(department,faculty) values('${department}','${faculty}')`, (err1, result1) => {
+      connection.query(`insert into DepartmentFaculty(department,faculty) values('${department}','${faculty}')`, (err1, result1) => {
         if (err1) return next(err1);
 
         connection.query(`insert into Course(courseNum, department) values(${req.body.courseNum},'${department}')`, (err2, result2) => {

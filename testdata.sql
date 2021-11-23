@@ -22,7 +22,7 @@ VALUES
 ('Linear Algebra'),
 ('Calculus');
 
-INSERT INTO Departmentfaculty(department, faculty)
+INSERT INTO DepartmentFaculty(department, faculty)
 VALUES
 ('CPSC', 'Science'),
 ('MATH', 'Science'),
