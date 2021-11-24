@@ -7,7 +7,10 @@ VALUES
 (5, 'Rat', 0),
 (6, 'Olivia', 0),
 (7, 'T-rex', 0),
-(8, 'Schmidt', 1);
+(8, 'Schmidt', 1),
+(9, 'Daniel', 1),
+(10, 'Jacek', 1),
+(11, 'Liam', 1);
 
 INSERT INTO Type(typeName)
 VALUES
@@ -73,10 +76,11 @@ VALUES
 
 INSERT INTO Admin(userID, staffNum)
 VALUES
-(3,5000),
-(5,1203),
-(6,32),
-(7,20);
+(1,5000),
+(8,1203),
+(9,32),
+(10,20),
+(11,1);
 
 INSERT INTO Solution(solutionID, body, userID, problemID, confidence)
 VALUES
@@ -159,12 +163,6 @@ VALUES
 (10, 32, "Guaranteed to show up on leetcode.", 6, 2),
 (11, 33, 'Just remember a neutrino is a subatomic particle similar to an electron.', 6, 1),
 (12, 34, 'I was never good at probability, but this does look correct.', 6, 1);
-
-
-
-
-
-
 
 
 INSERT INTO VoteRecord(recordID, status, solutionID, adviceID, userID)
