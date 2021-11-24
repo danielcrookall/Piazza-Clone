@@ -5,7 +5,7 @@
     <h3>Advice Request</h3>
     <div style="margin: 20px 5px 5px 5px;">
       <form action="/advice-request/adviceAllUser" method="post">
-        <input type="submit" class="btn btn-outline-primary" value="Find user who gave advices to all posted solution">
+        <input type="submit" class="btn btn-outline-primary" value="Find users who have given advice to all posted solutions">
       </form>
       <% if (adviceAllUsers) { %>
         <table class="table table-striped">
@@ -47,7 +47,7 @@
       </tbody>
     </table>
     <div>
-      <h3>Create new Advice Request</h3>
+      <h3>Create New Advice Request</h3>
       <form action="/advice-request" method="post">
         <input type="submit" class="btn btn-primary" value="Create">
         <div class="input-group">

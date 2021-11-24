@@ -93,6 +93,7 @@ VALUES
 (11, 'Neutrino.', 4, 9, 50),
 (12, 'A geometric random variable is the number of trials needed to get the first success in repeated Bernoulli trials. Its mean is 1/p and its variance is (1-p)/p^2. Its PMF is (1-p)^(x-1)*p where x = 1,2,3 ...', 4, 11, 78);
 
+
 INSERT INTO AdviceRequest(requestID, body, requestType, userID)
 VALUES
 (1, 'I do not think this solution is correct. Can someone please verify it', 'help',1),
@@ -107,20 +108,62 @@ VALUES
 (2, 'Positive'),
 (0, 'Neutral'),
 (-4, 'Negative'),
-(-5, 'Negative');
+(50, 'Positive'),
+(5, 'Positive'),
+(-985, 'Negative'),
+(20, 'Positive'),
+(-122, 'Negative'),
+(-1, 'Negative'),
+(3, 'Positive'),
+(4, 'Positive'),
+(-101, 'Negative'),
+(-20, 'Negative'),
+(10, 'Positive');
+
 
 INSERT INTO Advice(solutionID, adviceID, comment, userID, voteNum)
 VALUES
 (1, 1,'I got the same answer but it would be helpful if you showed a bit more work!', 5, 0),
-(4, 2, 'Wrong. Quicksort runs in O(n^2) time in the worst case. On average it actually takes O(nlogn) making it quite an efficient algorithm', 3, 0),
-(2, 3, 'Maybe give some more examples to make it more clear', 4, 0),
+(4, 2, 'Wrong. Quicksort runs in O(n^2) time in the worst case. On average it actually takes O(nlogn) making it quite an efficient algorithm', 3, 50),
+(2, 3, 'Maybe give some more examples to make it more clear', 4, 5),
 (11,4, 'What is a neutrino?', 1, 0),
-(3, 5, 'This is wrong. The probability of rolling a 6 is 1/6', 7, 0),
-(8, 6, 'Do not forget that multiplying by powers of 2 is the equivalent of right shifting. Also remember the difference between signed and unsigned shifts!',2,0),
+(3, 5, 'This is wrong. The probability of rolling a 6 is 1/6', 7, -985),
+(8, 6, 'Do not forget that multiplying by powers of 2 is the equivalent of right shifting. Also remember the difference between signed and unsigned shifts!',2,20),
 (6, 7, 'Stack smash attacks are much harder nowadays due to security measures such as nonexecutable stacks, randomization and stack canaries',3,0),
 (2, 8, "When do you use they're then?", 4, 0),
-(5, 9, 'I disagree. DFS uses a queue not BFS. So the answer is DFS.', 4, 0),
-(9, 10, 'How do you calculate the determinant of a matrix?', 8, 0);
+(5, 9, 'I disagree. DFS uses a queue not BFS. So the answer is DFS.', 4, -122),
+(9, 10, 'How do you calculate the determinant of a matrix?', 8, 0),
+
+(1, 11, 'Please update your solution with the math expressions formatted bettter.', 1, -1),
+(2, 12, "Correct. Don't forget the last case they're. This one is easy though, it's just a combination of they + are", 1, 3),
+(3, 13, 'Can you show the explicit sum?', 1, 1),
+(4, 14, "100% wrong, look in any textbook and you'll see that quicksort has an average time complexity of O(nlogn).", 1, 4),
+(5, 15, 'Good explanation, looks correct.', 1, 20),
+(6, 16, 'You should include what an array underflow is. An array underflow error is when depending on input you may be able to access elements before the beginning of the array.', 1, 5),
+(7, 17, 'Correct! A good trick is that a number that is divisible by 2 ends in 0 in binary, 00 is divisible by 4, 000 is divisible by 8 etc!', 1, 2),
+(8, 18, 'Yep, lookup bitwise operations to learn more.', 1, 3),
+(9, 19, "Yep, the determinant of a 2x2 matrix is the area of a parallelogram", 1, 4),
+(10, 20, "It's important to memorize the different types of traversals for trees. They come up frequently in algorithm studies.", 1, 2),
+(11, 21, 'Yep and neutrinos have a mass close to 0.', 1, 1),
+(12, 22, 'Remember there are actually 2 definitions for a geometric random variable. The other one is the number X of Bernoulli trials needed to get one success.', 1, 1),
+
+(1, 23, 'I got the same answer. I think this is correct', 6, 5),
+(2, 24, "Isn't this taught in elementary school?", 6, -101),
+(3, 25, 'How did you compute the sum?', 6, 1),
+(4, 26, "Ya this is definitely wrong. Quicksort is often used all the time.", 6, 4),
+(5, 27, "What's the difference between DFS and BFS?", 6, -20),
+(6, 28, 'Is a stack smash attack the same as a buffer overflow?', 6, 5),
+(7, 29, 'Why does address alignment even matter?', 6, 2),
+(8, 30, 'This is a form of bitmasking. You can google it for more information.', 6, 10),
+(9, 31, "This was covered in Math 200, multivariable calculus.", 6, 50),
+(10, 32, "Guaranteed to show up on leetcode.", 6, 2),
+(11, 33, 'Just remember a neutrino is a subatomic particle similar to an electron.', 6, 1),
+(12, 34, 'I was never good at probability, but this does look correct.', 6, 1);
+
+
+
+
+
 
 
 
