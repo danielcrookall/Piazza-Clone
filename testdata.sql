@@ -85,7 +85,7 @@ VALUES
 INSERT INTO Solution(solutionID, body, userID, problemID, confidence)
 VALUES
 (1, 'The width of each subinterval is 0.5. So the area is approximately 0.5 * f(1.5) + 0.5*f(2) + 0.5 * f(2.5) + 0.5 *f(3) + 0.5 * f(3.5) + 0.5 * f(4) = 683/16', 2, 5,5),
-(2, 'You should use there. Their is a posessive pronoun. There is an adbverb and means in or at that place.', 4, 3, 5),
+(2, 'You should use there. Their is a possessive pronoun. There is an adverb and means in or at that place.', 4, 3, 5),
 (3, 'Add up the probabilities of the die coming up 1 for the first time on toss 1,3,5 ... Rewrite it as a series and solve. The answer is 2/3.', 5, 10, 3),
 (4, 'The time complexity of quick sort is O(n!). It is a terrible algorithm and you should never use it', 7, 2, 2),
 (5, 'If the arc costs are equal, lowest cost first search is equivalent to BFS. This makes sense, because when performing LCFS you just use a priority queue. If the costs of the arcs are no longer a factor, the priority queue acts just like a regular queue.', 3, 12, 1),
@@ -93,7 +93,7 @@ VALUES
 (7, "In order for an address to be aligned by n bytes, it should be completely divisible by n (with no remainder). Since 0x000073bc ends in a 0xc it is not divisible by 8 and therefore not aligned.", 3,4,95),
 (8, "Dividing by any power of 2 is the same as right shifting by that many bits. The remainder of these divisions is the bit that gets cut off due to the right shift. So in order to preserve these bits you take i & 15", 3, 6, 99),
 (9, 'The area T(S) is the area of the original ellipse S * the absolute value of the determinant of A. Det(A) = 2 * -3 = -6. So the area of T(S) is |-6| * 5 = 30.', 2, 7, 75),
-(10, 'An in-order traveral.', 2, 8, 100),
+(10, 'An in-order traversal.', 2, 8, 100),
 (11, 'Neutrino.', 4, 9, 50),
 (12, 'A geometric random variable is the number of trials needed to get the first success in repeated Bernoulli trials. Its mean is 1/p and its variance is (1-p)/p^2. Its PMF is (1-p)^(x-1)*p where x = 1,2,3 ...', 4, 11, 78);
 
