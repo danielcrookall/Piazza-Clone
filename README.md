@@ -15,6 +15,12 @@
     DB=<your cwl id>
     ```
     - CWL: username of database
+3.
+  - make sure you installed mysql
+    - check mysql version
+    ```
+    mysql --version
+    ```
 
 ### How to start app
 - ```npm start```
